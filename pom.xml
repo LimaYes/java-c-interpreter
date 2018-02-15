@@ -48,7 +48,11 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.graalvm</groupId>
+			<artifactId>graal-sdk</artifactId>
+			<version>0.30</version>
+		</dependency>
 		<dependency>
 		    <groupId>org.eclipse.equinox</groupId>
 		    <artifactId>common</artifactId>

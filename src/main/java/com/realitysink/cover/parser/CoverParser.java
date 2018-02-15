@@ -47,6 +47,7 @@ import com.realitysink.cover.nodes.SLRootNode;
 import com.realitysink.cover.nodes.SLStatementNode;
 import com.realitysink.cover.nodes.access.CoverCreateObjectNode;
 import com.realitysink.cover.nodes.access.CoverReadDoublePropertyNodeGen;
+import com.realitysink.cover.nodes.access.CoverReadFloatPropertyNodeGen;
 import com.realitysink.cover.nodes.access.CoverReadLongPropertyNodeGen;
 import com.realitysink.cover.nodes.call.SLInvokeNode;
 import com.realitysink.cover.nodes.controlflow.SLBlockNode;
@@ -55,54 +56,8 @@ import com.realitysink.cover.nodes.controlflow.SLFunctionBodyNode;
 import com.realitysink.cover.nodes.controlflow.SLIfNode;
 import com.realitysink.cover.nodes.controlflow.SLReturnNode;
 import com.realitysink.cover.nodes.controlflow.SLWhileNode;
-import com.realitysink.cover.nodes.expression.CoverCommaLongNodeGen;
-import com.realitysink.cover.nodes.expression.CoverObjectConditionalExpressionNode;
-import com.realitysink.cover.nodes.expression.CoverAddDoubleNodeGen;
-import com.realitysink.cover.nodes.expression.CoverAddLongNode;
-import com.realitysink.cover.nodes.expression.CoverAddLongNodeGen;
-import com.realitysink.cover.nodes.expression.CoverDivDoubleNodeGen;
-import com.realitysink.cover.nodes.expression.CoverDivLongNodeGen;
-import com.realitysink.cover.nodes.expression.CoverDoubleLiteralNode;
-import com.realitysink.cover.nodes.expression.CoverFunctionLiteralNode;
-import com.realitysink.cover.nodes.expression.CoverInverseCommaLongNodeGen;
-import com.realitysink.cover.nodes.expression.CoverLessOrEqualDoubleNodeGen;
-import com.realitysink.cover.nodes.expression.CoverLessOrEqualLongNodeGen;
-import com.realitysink.cover.nodes.expression.CoverLessThanDoubleNodeGen;
-import com.realitysink.cover.nodes.expression.CoverLessThanLongNodeGen;
-import com.realitysink.cover.nodes.expression.CoverModDoubleNodeGen;
-import com.realitysink.cover.nodes.expression.CoverModLongNodeGen;
-import com.realitysink.cover.nodes.expression.CoverMulDoubleNodeGen;
-import com.realitysink.cover.nodes.expression.CoverMulLongNodeGen;
-import com.realitysink.cover.nodes.expression.CoverSubDoubleNodeGen;
-import com.realitysink.cover.nodes.expression.CoverSubLongNodeGen;
-import com.realitysink.cover.nodes.expression.SLBinaryAndNodeGen;
-import com.realitysink.cover.nodes.expression.SLBinaryNotNodeGen;
-import com.realitysink.cover.nodes.expression.SLBinaryOrNodeGen;
-import com.realitysink.cover.nodes.expression.SLBinaryShiftLeftNodeGen;
-import com.realitysink.cover.nodes.expression.SLBinaryShiftRightNodeGen;
-import com.realitysink.cover.nodes.expression.SLEqualNodeGen;
-import com.realitysink.cover.nodes.expression.SLForceBooleanNodeGen;
-import com.realitysink.cover.nodes.expression.SLLogicalAndNodeGen;
-import com.realitysink.cover.nodes.expression.SLLongLiteralNode;
-import com.realitysink.cover.nodes.expression.SLStringLiteralNode;
-import com.realitysink.cover.nodes.local.CoverNewArrayNode;
-import com.realitysink.cover.nodes.local.CoverReadArrayVariableNode;
-import com.realitysink.cover.nodes.local.CoverReadArrayVariableNodeGen;
-import com.realitysink.cover.nodes.local.CoverReadDoubleArrayValueNodeGen;
-import com.realitysink.cover.nodes.local.CoverReadDoubleVariableNodeGen;
-import com.realitysink.cover.nodes.local.CoverReadLongArgumentNodeGen;
-import com.realitysink.cover.nodes.local.CoverReadLongArrayValueNodeGen;
-import com.realitysink.cover.nodes.local.CoverReadLongVariableNodeGen;
-import com.realitysink.cover.nodes.local.CoverReadObjectVariableNodeGen;
-import com.realitysink.cover.nodes.local.CoverWriteDoubleArrayElementNodeGen;
-import com.realitysink.cover.nodes.local.CoverWriteDoubleNodeGen;
-import com.realitysink.cover.nodes.local.CoverWriteLongArrayElementNodeGen;
-import com.realitysink.cover.nodes.local.CoverWriteLongNodeGen;
-import com.realitysink.cover.nodes.local.CoverWriteObjectNodeGen;
-import com.realitysink.cover.nodes.local.CoverWritePropertyNode;
-import com.realitysink.cover.nodes.local.CoverWritePropertyNodeGen;
-import com.realitysink.cover.nodes.local.CreateLocalDoubleArrayNode;
-import com.realitysink.cover.nodes.local.CreateLocalLongArrayNode;
+import com.realitysink.cover.nodes.expression.*;
+import com.realitysink.cover.nodes.local.*;
 import com.realitysink.cover.runtime.SLFunction;
 import com.realitysink.cover.runtime.SLObjectType;
 
@@ -451,6 +406,8 @@ public class CoverParser {
             return CoverReadLongPropertyNodeGen.create(ownerExpression, memberType, field);
         } else if (memberType.getBasicType() == BasicType.DOUBLE) {
             return CoverReadDoublePropertyNodeGen.create(ownerExpression, memberType, field);
+        } else if (memberType.getBasicType() == BasicType.FLOAT) {
+            return CoverReadFloatPropertyNodeGen.create(ownerExpression, memberType, field);
         } else {
             throw new CoverParseException(expression, "unsupported property type");
         }
@@ -461,7 +418,7 @@ public class CoverParser {
         ICPPASTExpression array = expression.getArrayExpression();
         IASTExpression subscript = expression.getSubscriptExpression();
         
-        CoverReference ref = scope.findReference(array.getRawSignature()); // FIXME
+        CoverReference ref = scope.findReference(array.getRawSignature());
         if (ref == null) {
             throw new CoverParseException(expression, "identifier not found");
         }
@@ -472,6 +429,8 @@ public class CoverParser {
             return CoverReadLongArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
         } else if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.DOUBLE) {
             return CoverReadDoubleArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
+        } else if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.FLOAT) {
+            return CoverReadFloatArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
         } else {
             throw new CoverParseException(expression, "unsupported array type " + ref.getType().getTypeOfArrayContents().getBasicType());
         }
@@ -564,6 +523,8 @@ public class CoverParser {
             return CoverSubLongNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.DOUBLE)) {
             return CoverSubDoubleNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.FLOAT)) {
+            return CoverSubFloatNodeGen.create(leftNode, rightNode);
         } else {
             throw new CoverParseException(expression, "cannot multiply type " + newType);
         }
@@ -576,6 +537,8 @@ public class CoverParser {
             return CoverMulLongNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.DOUBLE)) {
             return CoverMulDoubleNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.FLOAT)) {
+            return CoverMulFloatNodeGen.create(leftNode, rightNode);
         } else {
             throw new CoverParseException(expression, "cannot multiply type " + newType);
         }
@@ -588,6 +551,8 @@ public class CoverParser {
             return CoverModLongNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.DOUBLE)) {
             return CoverModDoubleNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.FLOAT)) {
+            return CoverModFloatNodeGen.create(leftNode, rightNode);
         } else {
             throw new CoverParseException(expression, "cannot mod type " + newType);
         }
@@ -598,7 +563,9 @@ public class CoverParser {
         CoverType newType = leftNode.getType().combine(expression, rightNode.getType());
         if (newType.equals(CoverType.DOUBLE)) {
             return CoverLessOrEqualDoubleNodeGen.create(leftNode, rightNode);
-        } else if (newType.equals(CoverType.LONG)) {
+        } else if (newType.equals(CoverType.FLOAT)) {
+            return CoverLessOrEqualFloatNodeGen.create(leftNode, rightNode);
+        }  else if (newType.equals(CoverType.LONG)) {
             return CoverLessOrEqualLongNodeGen.create(leftNode, rightNode);
         } else {
             throw new CoverParseException(expression, "cannot add type " + newType);
@@ -610,6 +577,8 @@ public class CoverParser {
         CoverType newType = leftNode.getType().combine(expression, rightNode.getType());
         if (newType.equals(CoverType.DOUBLE)) {
             return CoverLessThanDoubleNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.FLOAT)) {
+            return CoverLessThanFloatNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.LONG)) {
             return CoverLessThanLongNodeGen.create(leftNode, rightNode);
         } else {
@@ -622,6 +591,8 @@ public class CoverParser {
         CoverType newType = left.getType().combine(node, right.getType());
         if (newType.equals(CoverType.DOUBLE)) {
             return CoverDivDoubleNodeGen.create(left, right);
+        } else if (newType.equals(CoverType.FLOAT)) {
+            return CoverDivFloatNodeGen.create(left, right);
         } else if (newType.equals(CoverType.LONG)) {
             return CoverDivLongNodeGen.create(left, right);
         } else {
@@ -634,6 +605,8 @@ public class CoverParser {
         CoverType newType = left.getType().combine(node, right.getType());
         if (newType.equals(CoverType.DOUBLE)) {
             return CoverAddDoubleNodeGen.create(left, right);
+        } else if (newType.equals(CoverType.FLOAT)) {
+            return CoverAddFloatNodeGen.create(left, right);
         } else if (newType.equals(CoverType.LONG)) {
             return CoverAddLongNodeGen.create(left, right);
         } else {
@@ -673,6 +646,8 @@ public class CoverParser {
                 return CoverWriteLongArrayElementNodeGen.create(arrayExpression, indexExpression, value);
             } else if (elementType == BasicType.DOUBLE) {
                 return CoverWriteDoubleArrayElementNodeGen.create(arrayExpression, indexExpression, value);
+            } else if (elementType == BasicType.FLOAT) {
+                return CoverWriteFloatArrayElementNodeGen.create(arrayExpression, indexExpression, value);
             } else {
                 throw new CoverParseException(node, "unsupported array type for assignment " + elementType);
             }
@@ -699,6 +674,8 @@ public class CoverParser {
             return CoverWriteLongNodeGen.create(value, ref.getFrameSlot());
         } else if (ref.getType().getBasicType() == BasicType.DOUBLE) {
             return CoverWriteDoubleNodeGen.create(value, ref.getFrameSlot());
+        } else if (ref.getType().getBasicType() == BasicType.FLOAT) {
+            return CoverWriteFloatNodeGen.create(value, ref.getFrameSlot());
         } else if (ref.getType().getBasicType() == BasicType.OBJECT) {
             return CoverWriteObjectNodeGen.create(value, ref.getFrameSlot());
         } else {
@@ -778,6 +755,8 @@ public class CoverParser {
                 CoverReference ref = scope.define(node, name, arrayType);
                 if (type.getBasicType() == BasicType.DOUBLE) {
                     nodes.add(new CreateLocalDoubleArrayNode(ref.getFrameSlot(), size));
+                } else if (type.getBasicType() == BasicType.FLOAT) {
+                    nodes.add(new CreateLocalFloatArrayNode(ref.getFrameSlot(), size));
                 } else if (type.getBasicType() == BasicType.LONG) {
                     nodes.add(new CreateLocalLongArrayNode(ref.getFrameSlot(), size));
                 } else {
@@ -794,7 +773,8 @@ public class CoverParser {
                 } else {
                     // FIXME: initialize according to type
                     if (type.getBasicType() == BasicType.LONG ||
-                            type.getBasicType() == BasicType.DOUBLE) {
+                            type.getBasicType() == BasicType.DOUBLE ||
+                            type.getBasicType() == BasicType.FLOAT) {
                         nodes.add(createSimpleAssignmentNode(d, ref, new SLLongLiteralNode(0)));
                     } else if (type.getBasicType() == BasicType.OBJECT) {
                         nodes.add(createSimpleAssignmentNode(d, ref, new CoverCreateObjectNode(type)));
@@ -837,6 +817,8 @@ public class CoverParser {
                             initialValue = (long) 0;
                         } else if (memberType.getBasicType() == BasicType.DOUBLE) {
                             initialValue = (double) 0.0;
+                        } else if (memberType.getBasicType() == BasicType.FLOAT) {
+                            initialValue = (float) 0.0;
                         } else {
                             warn(declarator, "unknown member type " + memberType + ", not initialized");
                         }
@@ -864,6 +846,9 @@ public class CoverParser {
                 return CoverType.LONG;
             case CPPASTSimpleDeclSpecifier.t_double:
                 return CoverType.DOUBLE;
+            case CPPASTSimpleDeclSpecifier.t_float:
+                return CoverType.FLOAT;
+
             default:
                 throw new CoverParseException(node, "unsupported basic type: " + d.getType());
             }
@@ -908,7 +893,7 @@ public class CoverParser {
                 longValue = Long.parseLong(stringValue);
             }
             return new SLLongLiteralNode(longValue);
-        } else if (y.getKind() == IASTLiteralExpression.lk_float_constant) {
+        } else if (y.getKind() == IASTLiteralExpression.lk_float_constant) { // fixme special care
             return new CoverDoubleLiteralNode(Double.parseDouble(new String(y.getValue())));
         } else {
             throw new CoverParseException(y, "unsupported literal type: " + y.getKind());
@@ -958,6 +943,8 @@ public class CoverParser {
                     return CoverReadLongVariableNodeGen.create(ref.getFrameSlot());
                 } else if (ref.getType().getBasicType().equals(BasicType.DOUBLE)) {
                     return CoverReadDoubleVariableNodeGen.create(ref.getFrameSlot());
+                } else if (ref.getType().getBasicType().equals(BasicType.FLOAT)) {
+                    return CoverReadFloatVariableNodeGen.create(ref.getFrameSlot());
                 } else if (ref.getType().getBasicType().equals(BasicType.ARRAY)) {
                     return CoverReadArrayVariableNodeGen.create(ref.getFrameSlot());
                 } else if (ref.getType().getBasicType().equals(BasicType.OBJECT)) {

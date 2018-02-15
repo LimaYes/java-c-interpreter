@@ -84,7 +84,9 @@ public abstract class SLExpressionNode extends SLStatementNode {
     public double executeDouble(VirtualFrame frame) throws UnexpectedResultException {
         return SLTypesGen.expectDouble(executeGeneric(frame));
     }
-    
+    public float executeFloat(VirtualFrame frame) throws UnexpectedResultException {
+        return SLTypesGen.expectFloat(executeGeneric(frame));
+    }
     public boolean executeBoolean(VirtualFrame frame) throws UnexpectedResultException {
         return SLTypesGen.expectBoolean(executeGeneric(frame));
     }

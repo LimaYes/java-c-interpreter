@@ -1,0 +1,11 @@
+#include <stdio.h>
+
+int main() {
+    int t=2247483647;
+	float x = 1.0;
+	float y = 20000001;
+	float result = x + y;
+	float popo = result*3;
+	printf("result: %f %f %f\n", result, result/3, result/2+12.3);
+	return 0;
+}

@@ -34,6 +34,7 @@ public class CoverType {
     public enum BasicType {
         LONG,
         DOUBLE,
+        FLOAT,
         STRING,
         BOOLEAN,
         ARRAY,
@@ -47,6 +48,7 @@ public class CoverType {
     public static final CoverType VOID = new CoverType(BasicType.VOID);
     public static final CoverType LONG = new CoverType(BasicType.LONG);
     public static final CoverType DOUBLE = new CoverType(BasicType.DOUBLE);
+    public static final CoverType FLOAT = new CoverType(BasicType.FLOAT);
     public static final CoverType BOOLEAN = new CoverType(BasicType.BOOLEAN);
     public static final CoverType FUNCTION = new CoverType(BasicType.FUNCTION);
     public static final CoverType STRING = new CoverType(BasicType.STRING);
@@ -102,6 +104,7 @@ public class CoverType {
         switch (basicType) {
         case LONG: return FrameSlotKind.Long;
         case DOUBLE: return FrameSlotKind.Double;
+        case FLOAT: return FrameSlotKind.Float;
         case OBJECT: return FrameSlotKind.Object;
         case STRING: return FrameSlotKind.Object;
         case ARRAY: return FrameSlotKind.Object;
@@ -129,6 +132,7 @@ public class CoverType {
         switch (basicType) {
         case LONG: return true;
         case DOUBLE: return true;
+        case FLOAT: return true;
         case BOOLEAN: return true;
         case OBJECT: return false;
         case STRING: return false;
@@ -150,8 +154,21 @@ public class CoverType {
         if (getBasicType() == BasicType.DOUBLE && type.getBasicType() == BasicType.LONG) {
             return true;
         }
+        if (getBasicType() == BasicType.FLOAT && type.getBasicType() == BasicType.LONG) {
+            return true;
+        }
+
+
         if (getBasicType() == BasicType.LONG && type.getBasicType() == BasicType.DOUBLE) {
             // FIXME: warn!
+            return true;
+        }
+
+        if (getBasicType() == BasicType.DOUBLE && type.getBasicType() == BasicType.FLOAT) {
+            return true;
+        }
+
+        if (getBasicType() == BasicType.FLOAT && type.getBasicType() == BasicType.DOUBLE) {
             return true;
         }
         if (basicType == BasicType.ARRAY_ELEMENT && getTypeOfArrayContents().canAccept(type)) {
@@ -168,9 +185,25 @@ public class CoverType {
         if (basicType == BasicType.LONG && other.basicType == BasicType.DOUBLE) {
             return other; // convert to double
         }
+        if (basicType == BasicType.LONG && other.basicType == BasicType.FLOAT) {
+            return other; // convert to double
+        }
+
+        if (basicType == BasicType.FLOAT && other.basicType == BasicType.LONG) {
+            return this; // convert to double
+        }
         if (basicType == BasicType.DOUBLE && other.basicType == BasicType.LONG) {
             return this; // convert to double
         }
+
+        if (basicType == BasicType.DOUBLE && other.basicType == BasicType.FLOAT) {
+            return this; // convert to double
+        }
+        if (basicType == BasicType.FLOAT && other.basicType == BasicType.DOUBLE) {
+            return other; // convert to double
+        }
+
+
         throw new CoverParseException(node, "incompatible types: " + basicType + " and " + other.basicType);
     }
 
@@ -232,5 +265,6 @@ public class CoverType {
 
     public void setShape(Shape shape) {
         this.shape = shape;
-    }    
+    }
+
 }
