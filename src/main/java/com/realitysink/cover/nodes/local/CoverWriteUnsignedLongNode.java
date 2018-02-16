@@ -25,16 +25,16 @@ import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 
 @NodeChild("valueNode")
 @NodeField(name = "slot", type = FrameSlot.class)
-public abstract class CoverWriteLongNode extends CoverTypedExpressionNode {
+public abstract class CoverWriteUnsignedLongNode extends CoverTypedExpressionNode {
     protected abstract FrameSlot getSlot();
 
     @Specialization
-    protected long writeLong(VirtualFrame frame, long value) {
+    protected long writeUnsignedLong(VirtualFrame frame, long value) {
         frame.setLong(getSlot(), value);
         return value;
     }
     
     public CoverType getType() {
-        return CoverType.LONG;
+        return CoverType.UNSIGNED_LONG;
     }
 }

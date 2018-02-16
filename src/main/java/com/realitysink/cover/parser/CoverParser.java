@@ -27,7 +27,6 @@ import com.oracle.truffle.api.dsl.NodeFactory;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.nodes.Node;
 import com.oracle.truffle.api.object.Layout;
-import com.oracle.truffle.api.object.Property;
 import com.oracle.truffle.api.object.Shape;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
@@ -71,7 +70,6 @@ import org.eclipse.cdt.core.dom.ast.IASTFileLocation;
 import org.eclipse.cdt.core.dom.ast.IASTInitializerClause;
 import org.eclipse.cdt.core.dom.ast.IASTLiteralExpression;
 import org.eclipse.cdt.core.dom.ast.IASTNode;
-import org.eclipse.cdt.core.dom.ast.IASTPointerOperator;
 import org.eclipse.cdt.core.dom.ast.IASTPreprocessorIncludeStatement;
 import org.eclipse.cdt.core.dom.ast.IASTStatement;
 import org.eclipse.cdt.core.dom.ast.IASTTranslationUnit;
@@ -402,9 +400,15 @@ public class CoverParser {
         CoverTypedExpressionNode ownerExpression = processExpression(scope, owner, null);
         String field = expression.getFieldName().toString();
         CoverType memberType = ownerExpression.getType().getObjectMembers().get(field);
-        if (memberType.getBasicType() == BasicType.LONG) {
+        if (memberType.getBasicType() == BasicType.UNSIGNED_LONG) {
             return CoverReadLongPropertyNodeGen.create(ownerExpression, memberType, field);
-        } else if (memberType.getBasicType() == BasicType.DOUBLE) {
+        } else if (memberType.getBasicType() == BasicType.SIGNED_LONG) {
+            return CoverReadLongPropertyNodeGen.create(ownerExpression, memberType, field);
+        } else if (memberType.getBasicType() == BasicType.UNSIGNED_INT) {
+            return CoverReadLongPropertyNodeGen.create(ownerExpression, memberType, field);
+        } else if (memberType.getBasicType() == BasicType.SIGNED_INT) {
+            return CoverReadLongPropertyNodeGen.create(ownerExpression, memberType, field);
+        }else if (memberType.getBasicType() == BasicType.DOUBLE) {
             return CoverReadDoublePropertyNodeGen.create(ownerExpression, memberType, field);
         } else if (memberType.getBasicType() == BasicType.FLOAT) {
             return CoverReadFloatPropertyNodeGen.create(ownerExpression, memberType, field);
@@ -425,8 +429,14 @@ public class CoverParser {
         if (ref.getType().getBasicType() != BasicType.ARRAY) {
             throw new CoverParseException(expression, "does not reference an array");
         }
-        if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.LONG) {
-            return CoverReadLongArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
+        if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.UNSIGNED_LONG) {
+            return CoverReadUnsignedLongArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
+        } else if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.SIGNED_LONG) {
+            return CoverReadSignedLongArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
+        } else if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.UNSIGNED_INT) {
+            return CoverReadUnsignedIntArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
+        } else if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.SIGNED_INT) {
+            return CoverReadSignedIntArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
         } else if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.DOUBLE) {
             return CoverReadDoubleArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
         } else if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.FLOAT) {
@@ -643,7 +653,7 @@ public class CoverParser {
             CoverReadArrayVariableNode arrayExpression = CoverReadArrayVariableNodeGen.create(frameSlot);
             BasicType elementType = ref.getType().getTypeOfArrayContents().getBasicType();
             if (elementType == BasicType.LONG) {
-                return CoverWriteLongArrayElementNodeGen.create(arrayExpression, indexExpression, value);
+                return CoverWriteUnsignedLongArrayElementNodeGen.create(arrayExpression, indexExpression, value);
             } else if (elementType == BasicType.DOUBLE) {
                 return CoverWriteDoubleArrayElementNodeGen.create(arrayExpression, indexExpression, value);
             } else if (elementType == BasicType.FLOAT) {
@@ -671,7 +681,7 @@ public class CoverParser {
             throw new CoverParseException(node, "cannot assign "+value.getType()+" to " + ref.getType());
         }
         if (ref.getType().getBasicType() == BasicType.LONG) {
-            return CoverWriteLongNodeGen.create(value, ref.getFrameSlot());
+            return CoverWriteUnsignedLongNodeGen.create(value, ref.getFrameSlot());
         } else if (ref.getType().getBasicType() == BasicType.DOUBLE) {
             return CoverWriteDoubleNodeGen.create(value, ref.getFrameSlot());
         } else if (ref.getType().getBasicType() == BasicType.FLOAT) {
@@ -758,7 +768,7 @@ public class CoverParser {
                 } else if (type.getBasicType() == BasicType.FLOAT) {
                     nodes.add(new CreateLocalFloatArrayNode(ref.getFrameSlot(), size));
                 } else if (type.getBasicType() == BasicType.LONG) {
-                    nodes.add(new CreateLocalLongArrayNode(ref.getFrameSlot(), size));
+                    nodes.add(new CreateLocalUnsignedLongArrayNode(ref.getFrameSlot(), size));
                 } else {
                     throw new CoverParseException(node, "unsupported array type " + type.getBasicType());
                 }
@@ -940,7 +950,7 @@ public class CoverParser {
         if (ref != null) {
             if (ref.getFrameSlot() != null) {
                 if (ref.getType().getBasicType().equals(BasicType.LONG)) {
-                    return CoverReadLongVariableNodeGen.create(ref.getFrameSlot());
+                    return CoverReadUnsignedLongVariableNodeGen.create(ref.getFrameSlot());
                 } else if (ref.getType().getBasicType().equals(BasicType.DOUBLE)) {
                     return CoverReadDoubleVariableNodeGen.create(ref.getFrameSlot());
                 } else if (ref.getType().getBasicType().equals(BasicType.FLOAT)) {
@@ -987,7 +997,7 @@ public class CoverParser {
             // copy to local var in the prologue
             final CoverTypedExpressionNode readArg;
             if (type.getBasicType() == BasicType.LONG) {
-                readArg = CoverReadLongArgumentNodeGen.create(i);
+                readArg = CoverReadUnsignedLongArgumentNodeGen.create(i);
             } else {
                 throw new CoverParseException(node, "unsupported argument type");
             }

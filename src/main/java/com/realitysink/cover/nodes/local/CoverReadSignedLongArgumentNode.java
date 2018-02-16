@@ -45,9 +45,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.profiles.BranchProfile;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.SLExpressionNode;
 import com.realitysink.cover.runtime.CoverRuntimeException;
-import com.realitysink.cover.runtime.SLNull;
 import com.realitysink.cover.slparser.SLNodeFactory;
 
 /**
@@ -57,7 +55,7 @@ import com.realitysink.cover.slparser.SLNodeFactory;
  * specialized and can, e.g., be accessed without unboxing, all arguments are loaded into local
  * variables {@link SLNodeFactory#addFormalParameter in the method prologue}.
  */
-public abstract class CoverReadLongArgumentNode extends CoverTypedExpressionNode {
+public abstract class CoverReadSignedLongArgumentNode extends CoverTypedExpressionNode {
 
     /** The argument number, i.e., the index into the array of arguments. */
     private final int index;
@@ -68,12 +66,12 @@ public abstract class CoverReadLongArgumentNode extends CoverTypedExpressionNode
      */
     private final BranchProfile outOfBoundsTaken = BranchProfile.create();
 
-    public CoverReadLongArgumentNode(int index) {
+    public CoverReadSignedLongArgumentNode(int index) {
         this.index = index;
     }
 
     @Specialization
-    public long getLong(VirtualFrame frame) {
+    public long getSignedLong(VirtualFrame frame) {
         Object[] args = frame.getArguments();
         if (index < args.length) {
             return (long) args[index];
@@ -86,6 +84,6 @@ public abstract class CoverReadLongArgumentNode extends CoverTypedExpressionNode
     }
     
     public CoverType getType() {
-        return CoverType.LONG;
+        return CoverType.SIGNED_LONG;
     }
 }

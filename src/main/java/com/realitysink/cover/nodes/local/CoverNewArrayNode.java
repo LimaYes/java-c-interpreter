@@ -46,24 +46,35 @@ public class CoverNewArrayNode extends CoverTypedExpressionNode {
         } catch (UnexpectedResultException e) {
             throw new CoverRuntimeException(this, "could not create array", e);
         }
-        if (type.getBasicType() == BasicType.LONG) {
+        if (type.getBasicType() == BasicType.SIGNED_LONG) {
             return new long[l];
+        }if (type.getBasicType() == BasicType.UNSIGNED_LONG) {
+            return new long[l];
+        }if (type.getBasicType() == BasicType.SIGNED_INT) {
+            return new int[l];
+        }if (type.getBasicType() == BasicType.UNSIGNED_INT) {
+            return new int[l];
         } else if (type.getBasicType() == BasicType.DOUBLE) {
             return new double[l];
+        } else if (type.getBasicType() == BasicType.FLOAT) {
+            return new float[l];
+        } else if (type.getBasicType() == BasicType.BOOLEAN) {
+            return new boolean[l];
         } else {
             throw new CoverRuntimeException(this, "unsupported array type: " + type);
         }        
     }
 
+    // TODO FIXME (incomplete and wrong)
     @Override
     public CoverType getType() {
         CompilerAsserts.neverPartOfCompilation();
         if ("int".equals(type)) {
-            return new CoverType(BasicType.ARRAY).setArrayType(new CoverType(BasicType.LONG));
+            return new CoverType(BasicType.ARRAY).setArrayType(new CoverType(BasicType.UNSIGNED_LONG));
         } else if ("long".equals(type)) {
-            return new CoverType(BasicType.ARRAY).setArrayType(new CoverType(BasicType.LONG));
+            return new CoverType(BasicType.ARRAY).setArrayType(new CoverType(BasicType.UNSIGNED_LONG));
         } else if ("char".equals(type)) {
-            return new CoverType(BasicType.ARRAY).setArrayType(new CoverType(BasicType.LONG));
+            return new CoverType(BasicType.ARRAY).setArrayType(new CoverType(BasicType.UNSIGNED_LONG));
         } else if ("double".equals(type)) {
             return new CoverType(BasicType.ARRAY).setArrayType(new CoverType(BasicType.DOUBLE));
         } else {

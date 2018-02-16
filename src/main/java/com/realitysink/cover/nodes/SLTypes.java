@@ -59,7 +59,7 @@ import com.realitysink.cover.runtime.SLNull;
  * conversion methods for all types. In this class, we only cover types where the automatically
  * generated ones would not be sufficient.
  */
-@TypeSystem({long.class, float.class, double.class, BigInteger.class, boolean.class, String.class, SLFunction.class, SLNull.class})
+@TypeSystem({int.class, long.class, float.class, double.class, BigInteger.class, boolean.class, String.class, SLFunction.class, SLNull.class})
 @DSLOptions
 public abstract class SLTypes {
 
@@ -109,6 +109,11 @@ public abstract class SLTypes {
     }
 
     @ImplicitCast
+    public static double castDouble(int value) {
+        return (double)value;
+    }
+
+    @ImplicitCast
     public static float castFloat(long value) {
         return value;
     }
@@ -119,7 +124,43 @@ public abstract class SLTypes {
     }
 
     @ImplicitCast
+    public static float castFloat(int value) {
+        return (float)value;
+    }
+
+    @ImplicitCast
+    public static int castInt(float value) {
+        return (int)value;
+    }
+
+    @ImplicitCast
+    public static int castInt(double value) {
+        return (int)value;
+    }
+
+    @ImplicitCast
+    public static int castInt(long value) {
+        return (int)value;
+    }
+
+    @ImplicitCast
+    public static boolean castBoolean(int value) {
+        return value != 0;
+    }
+
+    @ImplicitCast
     public static boolean castBoolean(long value) {
         return value != 0;
     }
+
+    @ImplicitCast
+    public static boolean castBoolean(float value) {
+        return value != 0;
+    }
+
+    @ImplicitCast
+    public static boolean castBoolean(double value) {
+        return value != 0;
+    }
+
 }

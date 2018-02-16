@@ -32,7 +32,10 @@ import com.realitysink.cover.parser.CoverParseException;
  */
 public class CoverType {
     public enum BasicType {
-        LONG,
+        UNSIGNED_INT,
+        SIGNED_INT,
+        UNSIGNED_LONG,
+        SIGNED_LONG,
         DOUBLE,
         FLOAT,
         STRING,
@@ -46,7 +49,10 @@ public class CoverType {
     }
     
     public static final CoverType VOID = new CoverType(BasicType.VOID);
-    public static final CoverType LONG = new CoverType(BasicType.LONG);
+    public static final CoverType SIGNED_LONG = new CoverType(BasicType.SIGNED_LONG);
+    public static final CoverType UNSIGNED_LONG = new CoverType(BasicType.UNSIGNED_LONG);
+    public static final CoverType SIGNED_INT = new CoverType(BasicType.SIGNED_INT);
+    public static final CoverType UNSIGNED_INT = new CoverType(BasicType.UNSIGNED_INT);
     public static final CoverType DOUBLE = new CoverType(BasicType.DOUBLE);
     public static final CoverType FLOAT = new CoverType(BasicType.FLOAT);
     public static final CoverType BOOLEAN = new CoverType(BasicType.BOOLEAN);
@@ -102,7 +108,10 @@ public class CoverType {
     public FrameSlotKind getFrameSlotKind(IASTNode node) {
         CompilerAsserts.neverPartOfCompilation();
         switch (basicType) {
-        case LONG: return FrameSlotKind.Long;
+        case SIGNED_LONG: return FrameSlotKind.Long;
+        case UNSIGNED_LONG: return FrameSlotKind.Long;
+        case SIGNED_INT: return FrameSlotKind.Int;
+        case UNSIGNED_INT: return FrameSlotKind.Int;
         case DOUBLE: return FrameSlotKind.Double;
         case FLOAT: return FrameSlotKind.Float;
         case OBJECT: return FrameSlotKind.Object;
@@ -130,7 +139,10 @@ public class CoverType {
     public boolean isPrimitiveType(IASTNode node) {
         CompilerAsserts.neverPartOfCompilation();
         switch (basicType) {
-        case LONG: return true;
+        case SIGNED_LONG: return true;
+        case UNSIGNED_LONG: return true;
+        case SIGNED_INT: return true;
+        case UNSIGNED_INT: return true;
         case DOUBLE: return true;
         case FLOAT: return true;
         case BOOLEAN: return true;
@@ -151,26 +163,16 @@ public class CoverType {
         if (isPrimitiveType(null) && getBasicType() == type.getBasicType()) {
             return true; // FIXME, array types!
         }
-        if (getBasicType() == BasicType.DOUBLE && type.getBasicType() == BasicType.LONG) {
-            return true;
-        }
-        if (getBasicType() == BasicType.FLOAT && type.getBasicType() == BasicType.LONG) {
-            return true;
-        }
 
+        // Just allow free conversion between these types
+        BasicType[] primoTypes = new BasicType[]{BasicType.SIGNED_INT, BasicType.UNSIGNED_INT, BasicType.SIGNED_LONG, BasicType.UNSIGNED_LONG, BasicType.FLOAT, BasicType.DOUBLE  };
+        for(int i=0; i<primoTypes.length; ++i)
+            for(int j=0; j<primoTypes.length; ++j) {
+                if(i==j) continue;
+                if (getBasicType() == primoTypes[i] && type.getBasicType() == primoTypes[j])
+                    return true;
+            }
 
-        if (getBasicType() == BasicType.LONG && type.getBasicType() == BasicType.DOUBLE) {
-            // FIXME: warn!
-            return true;
-        }
-
-        if (getBasicType() == BasicType.DOUBLE && type.getBasicType() == BasicType.FLOAT) {
-            return true;
-        }
-
-        if (getBasicType() == BasicType.FLOAT && type.getBasicType() == BasicType.DOUBLE) {
-            return true;
-        }
         if (basicType == BasicType.ARRAY_ELEMENT && getTypeOfArrayContents().canAccept(type)) {
             return true;
         }
@@ -182,26 +184,18 @@ public class CoverType {
         if (this.equals(other)) {
             return this;
         }
-        if (basicType == BasicType.LONG && other.basicType == BasicType.DOUBLE) {
-            return other; // convert to double
-        }
-        if (basicType == BasicType.LONG && other.basicType == BasicType.FLOAT) {
-            return other; // convert to double
-        }
 
-        if (basicType == BasicType.FLOAT && other.basicType == BasicType.LONG) {
-            return this; // convert to double
-        }
-        if (basicType == BasicType.DOUBLE && other.basicType == BasicType.LONG) {
-            return this; // convert to double
-        }
+        // Convert based on "precedence" which is equivalent with a higher position in array
+        BasicType[] primoTypes = new BasicType[]{BasicType.SIGNED_INT, BasicType.UNSIGNED_INT, BasicType.SIGNED_LONG, BasicType.UNSIGNED_LONG, BasicType.FLOAT, BasicType.DOUBLE  };
+        for(int i=0; i<primoTypes.length; ++i)
+            for(int j=0; j<primoTypes.length; ++j) {
+                if(i==j) continue;
+                if (getBasicType() == primoTypes[i] && other.getBasicType() == primoTypes[j])
+                    return (i>j)?this:other;
+            }
 
-        if (basicType == BasicType.DOUBLE && other.basicType == BasicType.FLOAT) {
-            return this; // convert to double
-        }
-        if (basicType == BasicType.FLOAT && other.basicType == BasicType.DOUBLE) {
-            return other; // convert to double
-        }
+            // TODO FIXME: add conversion exception when higher rank is signed https://www.safaribooksonline.com/library/view/c-in-a/0596006977/ch04.html
+
 
 
         throw new CoverParseException(node, "incompatible types: " + basicType + " and " + other.basicType);

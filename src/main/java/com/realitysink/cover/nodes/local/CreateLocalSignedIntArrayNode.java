@@ -16,30 +16,32 @@
 package com.realitysink.cover.nodes.local;
 
 import com.oracle.truffle.api.CompilerDirectives;
-import com.oracle.truffle.api.dsl.NodeChild;
-import com.oracle.truffle.api.dsl.NodeChildren;
-import com.oracle.truffle.api.dsl.Specialization;
+import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.NodeInfo;
-import com.realitysink.cover.nodes.CoverType;
-import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import com.realitysink.cover.nodes.SLExpressionNode;
+import com.realitysink.cover.nodes.SLStatementNode;
 import com.realitysink.cover.runtime.CoverRuntimeException;
 
-@NodeChildren({@NodeChild("array"), @NodeChild("index"), @NodeChild("value")})
-@NodeInfo(shortName="=")
-public abstract class CoverWriteLongArrayElementNode extends CoverTypedExpressionNode {
-    @Specialization
-    protected long writeLongArrayElement(long[] array, long index, long value) {
-        try {
-            array[(int) index] = value;
-        } catch (ArrayIndexOutOfBoundsException e) {
-            CompilerDirectives.transferToInterpreter();
-            throw new CoverRuntimeException(this, "index " + index + " out of bounds");
-        }
-        return value;
+public class CreateLocalSignedIntArrayNode extends SLStatementNode {
+    private final FrameSlot frameSlot;
+    @Child
+    private SLExpressionNode size;
+
+    public CreateLocalSignedIntArrayNode(FrameSlot frameSlot, SLExpressionNode size) {
+        this.frameSlot = frameSlot;
+        this.size = size;
     }
 
-    public CoverType getType() {
-        return CoverType.LONG;
+    @Override
+    public void executeVoid(VirtualFrame frame) {
+        int s;
+        try {
+            s = (int) size.executeLong(frame);
+        } catch (UnexpectedResultException e) {
+            CompilerDirectives.transferToInterpreter();
+            throw new CoverRuntimeException(this, e);
+        }
+        frame.setObject(frameSlot, new int[s]);
     }
 }

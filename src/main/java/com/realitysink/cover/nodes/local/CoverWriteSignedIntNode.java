@@ -15,25 +15,26 @@
  */
 package com.realitysink.cover.nodes.local;
 
+import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.NodeField;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.FrameSlot;
-import com.oracle.truffle.api.frame.FrameUtil;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 
+@NodeChild("valueNode")
 @NodeField(name = "slot", type = FrameSlot.class)
-public abstract class CoverReadLongVariableNode extends CoverTypedExpressionNode {
-
+public abstract class CoverWriteSignedIntNode extends CoverTypedExpressionNode {
     protected abstract FrameSlot getSlot();
 
     @Specialization
-    protected long readLong(VirtualFrame frame) {
-        return FrameUtil.getLongSafe(frame, getSlot());
+    protected int writeSignedInt(VirtualFrame frame, int value) {
+        frame.setLong(getSlot(), value);
+        return value;
     }
     
     public CoverType getType() {
-        return CoverType.LONG;
+        return CoverType.SIGNED_INT;
     }
 }
