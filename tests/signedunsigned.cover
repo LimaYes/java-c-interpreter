@@ -1,0 +1,9 @@
+int main() {
+	int g = 0;
+	int h = g-1;
+	if (g>h)
+	    printf("unsigned handling does not work!");
+	else
+	    printf("unsigned handling works fine!");
+	return 0;
+}
