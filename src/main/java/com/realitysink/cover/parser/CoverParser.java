@@ -503,19 +503,30 @@ public class CoverParser {
         } else if (operator == CPPASTBinaryExpression.op_binaryAndAssign) {
             CoverTypedExpressionNode change = processExpression(scope, expression.getOperand2(), null);
             CoverTypedExpressionNode source = processExpression(scope, expression.getOperand1(), null);
-            result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryIntAndNodeGen.create(source, change));
+            if(source.getType() == CoverType.UNSIGNED_INT || source.getType() == CoverType.SIGNED_INT)
+                result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryIntOrNodeGen.create(source, change));
+            else
+                result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryLongOrNodeGen.create(source, change));
         } else if (operator == CPPASTBinaryExpression.op_shiftRightAssign) {
             CoverTypedExpressionNode change = processExpression(scope, expression.getOperand2(), null);
             CoverTypedExpressionNode source = processExpression(scope, expression.getOperand1(), null);
-            result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryShiftRightNodeGen.create(source, change));
+            if(source.getType() == CoverType.UNSIGNED_INT || source.getType() == CoverType.SIGNED_INT)
+                result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryIntShiftRightNodeGen.create(source, change));
+            else
+                result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryLongShiftRightNodeGen.create(source, change));
         } else if (operator == CPPASTBinaryExpression.op_shiftLeftAssign) {
             CoverTypedExpressionNode change = processExpression(scope, expression.getOperand2(), null);
             CoverTypedExpressionNode source = processExpression(scope, expression.getOperand1(), null);
-            result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryLongShiftLeftNodeGen.create(source, change));
-        } else if (operator == CPPASTBinaryExpression.op_binaryOrAssign) {
+            if(source.getType() == CoverType.UNSIGNED_INT || source.getType() == CoverType.SIGNED_INT)
+                result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryIntShiftLeftNodeGen.create(source, change));
+            else
+                result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryLongShiftLeftNodeGen.create(source, change));        } else if (operator == CPPASTBinaryExpression.op_binaryOrAssign) {
             CoverTypedExpressionNode change = processExpression(scope, expression.getOperand2(), null);
             CoverTypedExpressionNode source = processExpression(scope, expression.getOperand1(), null);
-            result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryOrNodeGen.create(source, change));
+            if(source.getType() == CoverType.UNSIGNED_INT || source.getType() == CoverType.SIGNED_INT)
+                result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryIntOrNodeGen.create(source, change));
+            else
+                result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryLongOrNodeGen.create(source, change));
         } else if (operator == CPPASTBinaryExpression.op_modulo) {
             CoverTypedExpressionNode leftNode = processExpression(scope, expression.getOperand1(), null);
             CoverTypedExpressionNode rightNode = processExpression(scope, expression.getOperand2(), null);
@@ -529,22 +540,34 @@ public class CoverParser {
 
     private CoverTypedExpressionNode createSubNode(CPPASTBinaryExpression expression, CoverTypedExpressionNode leftNode, CoverTypedExpressionNode rightNode) {
         CoverType newType = leftNode.getType().combine(expression, rightNode.getType());
-        if (newType.equals(CoverType.LONG)) {
+        if (newType.equals(CoverType.SIGNED_LONG)) {
             return CoverSubSignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_LONG)) {
+            return CoverSubUnsignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.SIGNED_INT)) {
+            return CoverSubSignedIntNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_INT)) {
+            return CoverSubUnsignedIntNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.DOUBLE)) {
             return CoverSubDoubleNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.FLOAT)) {
             return CoverSubFloatNodeGen.create(leftNode, rightNode);
         } else {
-            throw new CoverParseException(expression, "cannot multiply type " + newType);
+            throw new CoverParseException(expression, "cannot subtract type " + newType);
         }
     }
 
     private CoverTypedExpressionNode createMulNode(CPPASTBinaryExpression expression,
             CoverTypedExpressionNode leftNode, CoverTypedExpressionNode rightNode) {
         CoverType newType = leftNode.getType().combine(expression, rightNode.getType());
-        if (newType.equals(CoverType.LONG)) {
+        if (newType.equals(CoverType.SIGNED_LONG)) {
+            return CoverMulSignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_LONG)) {
             return CoverMulUnsignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.SIGNED_INT)) {
+            return CoverMulSignedIntNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_INT)) {
+            return CoverMulUnsignedIntNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.DOUBLE)) {
             return CoverMulDoubleNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.FLOAT)) {
@@ -557,8 +580,14 @@ public class CoverParser {
     private CoverTypedExpressionNode createModNode(CPPASTBinaryExpression expression,
             CoverTypedExpressionNode leftNode, CoverTypedExpressionNode rightNode) {
         CoverType newType = leftNode.getType().combine(expression, rightNode.getType());
-        if (newType.equals(CoverType.LONG)) {
+        if (newType.equals(CoverType.SIGNED_LONG)) {
             return CoverModSignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_LONG)) {
+            return CoverModUnsignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.SIGNED_INT)) {
+            return CoverModSignedIntNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_INT)) {
+            return CoverModUnsignedIntNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.DOUBLE)) {
             return CoverModDoubleNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.FLOAT)) {
@@ -571,54 +600,78 @@ public class CoverParser {
     private CoverTypedExpressionNode createLessOrEqualNode(CPPASTBinaryExpression expression,
             CoverTypedExpressionNode leftNode, CoverTypedExpressionNode rightNode) {
         CoverType newType = leftNode.getType().combine(expression, rightNode.getType());
-        if (newType.equals(CoverType.DOUBLE)) {
+        if (newType.equals(CoverType.SIGNED_LONG)) {
+            return CoverLessOrEqualSignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_LONG)) {
+            return CoverLessOrEqualUnsignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.SIGNED_INT)) {
+            return CoverLessOrEqualSignedIntNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_INT)) {
+            return CoverLessOrEqualUnsignedIntNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.DOUBLE)) {
             return CoverLessOrEqualDoubleNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.FLOAT)) {
             return CoverLessOrEqualFloatNodeGen.create(leftNode, rightNode);
-        }  else if (newType.equals(CoverType.LONG)) {
-            return CoverLessOrEqualSignedLongNodeGen.create(leftNode, rightNode);
         } else {
-            throw new CoverParseException(expression, "cannot add type " + newType);
+            throw new CoverParseException(expression, "cannot <= type " + newType);
         }
     }
 
     private CoverTypedExpressionNode createLessThanNode(CPPASTBinaryExpression expression,
             CoverTypedExpressionNode leftNode, CoverTypedExpressionNode rightNode) {
         CoverType newType = leftNode.getType().combine(expression, rightNode.getType());
-        if (newType.equals(CoverType.DOUBLE)) {
+        if (newType.equals(CoverType.SIGNED_LONG)) {
+            return CoverLessThanSignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_LONG)) {
+            return CoverLessThanUnsignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.SIGNED_INT)) {
+            return CoverLessThanSignedIntNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_INT)) {
+            return CoverLessThanUnsignedIntNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.DOUBLE)) {
             return CoverLessThanDoubleNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.FLOAT)) {
             return CoverLessThanFloatNodeGen.create(leftNode, rightNode);
-        } else if (newType.equals(CoverType.LONG)) {
-            return CoverLessThanLongNodeGen.create(leftNode, rightNode);
         } else {
-            throw new CoverParseException(expression, "cannot add type " + newType);
+            throw new CoverParseException(expression, "cannot < type " + newType);
         }
     }
 
     private CoverTypedExpressionNode createDivNode(CPPASTBinaryExpression node,
-            CoverTypedExpressionNode left, CoverTypedExpressionNode right) {
-        CoverType newType = left.getType().combine(node, right.getType());
-        if (newType.equals(CoverType.DOUBLE)) {
-            return CoverDivDoubleNodeGen.create(left, right);
+            CoverTypedExpressionNode leftNode, CoverTypedExpressionNode rightNode) {
+        CoverType newType = leftNode.getType().combine(node, rightNode.getType());
+        if (newType.equals(CoverType.SIGNED_LONG)) {
+            return CoverDivSignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_LONG)) {
+            return CoverDivUnsignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.SIGNED_INT)) {
+            return CoverDivSignedIntNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_INT)) {
+            return CoverDivUnsignedIntNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.DOUBLE)) {
+            return CoverDivDoubleNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.FLOAT)) {
-            return CoverDivFloatNodeGen.create(left, right);
-        } else if (newType.equals(CoverType.LONG)) {
-            return CoverDivUnsignedLongNodeGen.create(left, right);
+            return CoverDivFloatNodeGen.create(leftNode, rightNode);
         } else {
-            throw new CoverParseException(node, "cannot add type " + newType);
+            throw new CoverParseException(node, "cannot div type " + newType);
         }
     }
 
-    private CoverTypedExpressionNode createAddNode(CPPASTBinaryExpression node, CoverTypedExpressionNode left,
-            CoverTypedExpressionNode right) {
-        CoverType newType = left.getType().combine(node, right.getType());
-        if (newType.equals(CoverType.DOUBLE)) {
-            return CoverAddDoubleNodeGen.create(left, right);
+    private CoverTypedExpressionNode createAddNode(CPPASTBinaryExpression node, CoverTypedExpressionNode leftNode,
+            CoverTypedExpressionNode rightNode) {
+        CoverType newType = leftNode.getType().combine(node, rightNode.getType());
+        if (newType.equals(CoverType.SIGNED_LONG)) {
+            return CoverAddSignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_LONG)) {
+            return CoverAddUnsignedLongNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.SIGNED_INT)) {
+            return CoverAddSignedIntNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.UNSIGNED_INT)) {
+            return CoverAddUnsignedIntNodeGen.create(leftNode, rightNode);
+        } else if (newType.equals(CoverType.DOUBLE)) {
+            return CoverAddDoubleNodeGen.create(leftNode, rightNode);
         } else if (newType.equals(CoverType.FLOAT)) {
-            return CoverAddFloatNodeGen.create(left, right);
-        } else if (newType.equals(CoverType.LONG)) {
-            return CoverAddUnsignedLongNodeGen.create(left, right);
+            return CoverAddFloatNodeGen.create(leftNode, rightNode);
         } else {
             throw new CoverParseException(node, "cannot add type " + newType);
         }
@@ -652,8 +705,14 @@ public class CoverParser {
                 throw new CoverParseException(node, "is not an array");
             CoverReadArrayVariableNode arrayExpression = CoverReadArrayVariableNodeGen.create(frameSlot);
             BasicType elementType = ref.getType().getTypeOfArrayContents().getBasicType();
-            if (elementType == BasicType.LONG) {
+            if (elementType == BasicType.UNSIGNED_LONG) {
                 return CoverWriteUnsignedLongArrayElementNodeGen.create(arrayExpression, indexExpression, value);
+            } else if (elementType == BasicType.SIGNED_LONG) {
+                return CoverWriteSignedLongArrayElementNodeGen.create(arrayExpression, indexExpression, value);
+            } else if (elementType == BasicType.UNSIGNED_INT) {
+                return CoverWriteUnsignedIntArrayElementNodeGen.create(arrayExpression, indexExpression, value);
+            } else if (elementType == BasicType.SIGNED_INT) {
+                return CoverWriteSignedIntArrayElementNodeGen.create(arrayExpression, indexExpression, value);
             } else if (elementType == BasicType.DOUBLE) {
                 return CoverWriteDoubleArrayElementNodeGen.create(arrayExpression, indexExpression, value);
             } else if (elementType == BasicType.FLOAT) {
@@ -680,8 +739,14 @@ public class CoverParser {
         if (!ref.getType().canAccept(value.getType())) {
             throw new CoverParseException(node, "cannot assign "+value.getType()+" to " + ref.getType());
         }
-        if (ref.getType().getBasicType() == BasicType.LONG) {
+        if (ref.getType().getBasicType() == BasicType.UNSIGNED_LONG) {
             return CoverWriteUnsignedLongNodeGen.create(value, ref.getFrameSlot());
+        } else if (ref.getType().getBasicType() == BasicType.SIGNED_LONG) {
+            return CoverWriteSignedLongNodeGen.create(value, ref.getFrameSlot());
+        } else if (ref.getType().getBasicType() == BasicType.UNSIGNED_INT) {
+            return CoverWriteUnsignedIntNodeGen.create(value, ref.getFrameSlot());
+        } else if (ref.getType().getBasicType() == BasicType.SIGNED_INT) {
+            return CoverWriteSignedIntNodeGen.create(value, ref.getFrameSlot());
         } else if (ref.getType().getBasicType() == BasicType.DOUBLE) {
             return CoverWriteDoubleNodeGen.create(value, ref.getFrameSlot());
         } else if (ref.getType().getBasicType() == BasicType.FLOAT) {
@@ -708,13 +773,14 @@ public class CoverParser {
         } else {
             throw new CoverParseException(node, "Unsupported operator type " + operator);
         }
-        
+
+        // FIXME THIS IS WRONG HERE
         // turn (++i) into (i=i+1)
         CoverAddUnsignedLongNode addNode = CoverAddUnsignedLongNodeGen.create(readNode, new SLUnsignedLongLiteralNode(change));
         CoverTypedExpressionNode writeNode = createWriteVariableNode(scope, node.getOperand(), addNode);
         if (operator == IASTUnaryExpression.op_postFixIncr || operator == IASTUnaryExpression.op_postFixDecr) {
             // Use the "inverse comma" operator to return the old value of i
-            return CoverInverseCommaLongNodeGen.create(readNode, writeNode);
+            return CoverInverseCommaUnsignedLongNodeGen.create(readNode, writeNode);
         } else {
             return writeNode;
         }
@@ -767,8 +833,14 @@ public class CoverParser {
                     nodes.add(new CreateLocalDoubleArrayNode(ref.getFrameSlot(), size));
                 } else if (type.getBasicType() == BasicType.FLOAT) {
                     nodes.add(new CreateLocalFloatArrayNode(ref.getFrameSlot(), size));
-                } else if (type.getBasicType() == BasicType.LONG) {
+                } else if (type.getBasicType() == BasicType.UNSIGNED_LONG) {
                     nodes.add(new CreateLocalUnsignedLongArrayNode(ref.getFrameSlot(), size));
+                } else if (type.getBasicType() == BasicType.SIGNED_LONG) {
+                    nodes.add(new CreateLocalSignedLongArrayNode(ref.getFrameSlot(), size));
+                } else if (type.getBasicType() == BasicType.UNSIGNED_INT) {
+                    nodes.add(new CreateLocalUnsignedIntArrayNode(ref.getFrameSlot(), size));
+                } else if (type.getBasicType() == BasicType.SIGNED_INT) {
+                    nodes.add(new CreateLocalSignedIntArrayNode(ref.getFrameSlot(), size));
                 } else {
                     throw new CoverParseException(node, "unsupported array type " + type.getBasicType());
                 }
@@ -782,7 +854,7 @@ public class CoverParser {
                     nodes.add(createSimpleAssignmentNode(node, ref, expression));
                 } else {
                     // FIXME: initialize according to type
-                    if (type.getBasicType() == BasicType.LONG ||
+                    if (type.getBasicType() == BasicType.UNSIGNED_LONG || // TODO FIXME JUST WRONG HERE
                             type.getBasicType() == BasicType.DOUBLE ||
                             type.getBasicType() == BasicType.FLOAT) {
                         nodes.add(createSimpleAssignmentNode(d, ref, new SLUnsignedLongLiteralNode(0)));
@@ -823,8 +895,10 @@ public class CoverParser {
                         newType.getObjectMembers().put(name, memberType);
                         // FIXME: also process initializers?
                         Object initialValue = null;
-                        if (memberType.getBasicType() == BasicType.LONG) {
+                        if (memberType.getBasicType() == BasicType.UNSIGNED_LONG || memberType.getBasicType() == BasicType.SIGNED_LONG) {
                             initialValue = (long) 0;
+                        } else if (memberType.getBasicType() == BasicType.UNSIGNED_INT || memberType.getBasicType() == BasicType.SIGNED_INT) {
+                            initialValue = (int) 0;
                         } else if (memberType.getBasicType() == BasicType.DOUBLE) {
                             initialValue = (double) 0.0;
                         } else if (memberType.getBasicType() == BasicType.FLOAT) {
@@ -849,11 +923,13 @@ public class CoverParser {
             switch (d.getType()) {
             case CPPASTSimpleDeclSpecifier.t_unspecified:
                 if (!d.isLong()) throw new CoverParseException(node, "unspecified is not a long!");
-                return CoverType.LONG;
+                return CoverType.SIGNED_LONG;
             case CPPASTSimpleDeclSpecifier.t_char:
-                return CoverType.LONG;
+                return CoverType.SIGNED_LONG;
             case CPPASTSimpleDeclSpecifier.t_int:
-                return CoverType.LONG;
+                return CoverType.SIGNED_INT;
+            case CPPASTSimpleDeclSpecifier.t_decimal64: // TODO FIXME unsigned types unavailable ... what do we do now?
+                return CoverType.SIGNED_LONG;
             case CPPASTSimpleDeclSpecifier.t_double:
                 return CoverType.DOUBLE;
             case CPPASTSimpleDeclSpecifier.t_float:
@@ -949,8 +1025,14 @@ public class CoverParser {
         CoverReference ref = scope.findReference(name);
         if (ref != null) {
             if (ref.getFrameSlot() != null) {
-                if (ref.getType().getBasicType().equals(BasicType.LONG)) {
+                if (ref.getType().getBasicType().equals(BasicType.UNSIGNED_LONG)) {
                     return CoverReadUnsignedLongVariableNodeGen.create(ref.getFrameSlot());
+                } else if (ref.getType().getBasicType().equals(BasicType.SIGNED_LONG)) {
+                    return CoverReadSignedLongVariableNodeGen.create(ref.getFrameSlot());
+                } else if (ref.getType().getBasicType().equals(BasicType.UNSIGNED_INT)) {
+                    return CoverReadUnsignedIntVariableNodeGen.create(ref.getFrameSlot());
+                } else if (ref.getType().getBasicType().equals(BasicType.SIGNED_INT)) {
+                    return CoverReadSignedIntVariableNodeGen.create(ref.getFrameSlot());
                 } else if (ref.getType().getBasicType().equals(BasicType.DOUBLE)) {
                     return CoverReadDoubleVariableNodeGen.create(ref.getFrameSlot());
                 } else if (ref.getType().getBasicType().equals(BasicType.FLOAT)) {
@@ -996,8 +1078,14 @@ public class CoverParser {
             
             // copy to local var in the prologue
             final CoverTypedExpressionNode readArg;
-            if (type.getBasicType() == BasicType.LONG) {
+            if (type.getBasicType() == BasicType.UNSIGNED_LONG) {
                 readArg = CoverReadUnsignedLongArgumentNodeGen.create(i);
+            } else if (type.getBasicType() == BasicType.SIGNED_LONG) {
+                readArg = CoverReadSignedLongArgumentNodeGen.create(i);
+            } else if (type.getBasicType() == BasicType.UNSIGNED_INT) {
+                readArg = CoverReadUnsignedIntArgumentNodeGen.create(i);
+            } else if (type.getBasicType() == BasicType.SIGNED_INT) {
+                readArg = CoverReadSignedIntArgumentNodeGen.create(i);
             } else {
                 throw new CoverParseException(node, "unsupported argument type");
             }

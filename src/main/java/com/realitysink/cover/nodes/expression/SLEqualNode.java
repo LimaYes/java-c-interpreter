@@ -68,18 +68,10 @@ import com.realitysink.cover.runtime.SLNull;
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
 public abstract class SLEqualNode extends CoverTypedExpressionNode {
 
+
+    // TODO FIXME: float and int pleaaase
     @Specialization
     protected boolean equal(long left, long right) {
-        return left == right;
-    }
-
-    @Specialization
-    protected boolean equal(int left, int right) {
-        return left == right;
-    }
-
-    @Specialization
-    protected boolean equal(float left, float right) {
         return left == right;
     }
 

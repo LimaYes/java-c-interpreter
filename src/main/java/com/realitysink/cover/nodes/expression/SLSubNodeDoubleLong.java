@@ -40,19 +40,19 @@
  */
 package com.realitysink.cover.nodes.expression;
 
-import java.math.BigInteger;
-
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.ExactMath;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.SLBinaryNode;
 
+import java.math.BigInteger;
+
 /**
  * This class is similar to the extensively documented {@link SLAddNode}.
  */
 @NodeInfo(shortName = "-")
-public abstract class SLSubNode extends SLBinaryNode {
+public abstract class SLSubNodeDoubleLong extends SLBinaryNode {
 
     @Specialization(rewriteOn = ArithmeticException.class)
     protected long sub(long left, long right) {
