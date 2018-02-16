@@ -15,39 +15,22 @@
  */
 package com.realitysink.cover.nodes.expression;
 
-import com.oracle.truffle.api.frame.VirtualFrame;
+import com.oracle.truffle.api.dsl.NodeChild;
+import com.oracle.truffle.api.dsl.NodeChildren;
+import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
-import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.SLExpressionNode;
 
-@NodeInfo(shortName = "const")
-public final class SLLongLiteralNode extends CoverTypedExpressionNode {
-
-    private final long value;
-
-    public SLLongLiteralNode(long value) {
-        this.value = value;
+@NodeInfo(shortName = "/")
+@NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
+public abstract class CoverDivSignedIntNode extends CoverTypedExpressionNode {
+    @Specialization
+    protected int div(int left, int right) {
+        int result = left / right;
+        return result;
     }
-
-    @Override
-    public long executeLong(VirtualFrame frame) throws UnexpectedResultException {
-        return value;
-    }
-
-    @Override
-    public double executeDouble(VirtualFrame frame) throws UnexpectedResultException {
-        return value;
-    }
-
-    @Override
-    public Object executeGeneric(VirtualFrame frame) {
-        return value;
-    }
-
-    @Override
     public CoverType getType() {
-        return CoverType.LONG;
-    }
+        return CoverType.SIGNED_INT;
+    }    
 }

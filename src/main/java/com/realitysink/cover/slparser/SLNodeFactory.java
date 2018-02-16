@@ -69,7 +69,7 @@ import com.realitysink.cover.nodes.controlflow.SLReturnNode;
 import com.realitysink.cover.nodes.controlflow.SLWhileNode;
 import com.realitysink.cover.nodes.expression.SLBigIntegerLiteralNode;
 import com.realitysink.cover.nodes.expression.SLFunctionLiteralNode;
-import com.realitysink.cover.nodes.expression.SLLongLiteralNode;
+import com.realitysink.cover.nodes.expression.SLUnsignedLongLiteralNode;
 import com.realitysink.cover.nodes.expression.SLParenExpressionNode;
 import com.realitysink.cover.nodes.expression.SLStringLiteralNode;
 import com.realitysink.cover.nodes.local.SLReadArgumentNode;
@@ -435,7 +435,7 @@ public class SLNodeFactory {
         SLExpressionNode result;
         try {
             /* Try if the literal is small enough to fit into a long value. */
-            result = new SLLongLiteralNode(Long.parseLong(literalToken.val));
+            result = new SLUnsignedLongLiteralNode(Long.parseLong(literalToken.val));
         } catch (NumberFormatException ex) {
             /* Overflow of long value, so fall back to BigInteger. */
             result = new SLBigIntegerLiteralNode(new BigInteger(literalToken.val));

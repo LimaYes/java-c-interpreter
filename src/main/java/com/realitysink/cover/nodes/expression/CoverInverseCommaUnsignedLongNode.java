@@ -22,16 +22,19 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 
-@NodeInfo(shortName = "<")
+/**
+ * The "comma" operator. Evaluates both expressions and returns the value of the second.
+ * @author gerard
+ *
+ */
+@NodeInfo(shortName = "+")
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
-public abstract class CoverLessThanLongNode extends CoverTypedExpressionNode {
-
+public abstract class CoverInverseCommaUnsignedLongNode extends CoverTypedExpressionNode {
     @Specialization
-    protected boolean lessThan(long left, long right) {
-        return left < right;
+    protected long add(long left, Object right) { // FIXME: are there faster ways to ignore the first node?
+        return left;
     }
-
     public CoverType getType() {
-        return CoverType.BOOLEAN;
-    }    
+        return CoverType.UNSIGNED_LONG;
+    }
 }

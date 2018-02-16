@@ -22,16 +22,15 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 
-@NodeInfo(shortName = "%")
+@NodeInfo(shortName = "/")
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
-public abstract class CoverModLongNode extends CoverTypedExpressionNode {
-
+public abstract class CoverDivSignedLongNode extends CoverTypedExpressionNode {
     @Specialization
-    protected long div(long left, long right) throws ArithmeticException {
-        return left % right;
+    protected long div(long left, long right) {
+        long result = left / right;
+        return result;
     }
-    
     public CoverType getType() {
-        return CoverType.LONG;
-    }
+        return CoverType.SIGNED_LONG;
+    }    
 }

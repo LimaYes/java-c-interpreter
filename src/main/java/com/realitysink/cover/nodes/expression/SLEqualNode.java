@@ -74,6 +74,16 @@ public abstract class SLEqualNode extends CoverTypedExpressionNode {
     }
 
     @Specialization
+    protected boolean equal(int left, int right) {
+        return left == right;
+    }
+
+    @Specialization
+    protected boolean equal(float left, float right) {
+        return left == right;
+    }
+
+    @Specialization
     protected boolean equal(double left, double right) {
         // FIXME: warn if these are not whole numbers!
         // throw new CoverRuntimeException(this, "Really? Are you comparing doubles using == ?");

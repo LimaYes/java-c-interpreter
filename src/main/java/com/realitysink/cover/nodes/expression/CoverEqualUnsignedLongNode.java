@@ -22,15 +22,16 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 
-@NodeInfo(shortName = "/")
+@NodeInfo(shortName = "==")
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
-public abstract class CoverDivLongNode extends CoverTypedExpressionNode {
+public abstract class CoverEqualUnsignedLongNode extends CoverTypedExpressionNode {
+
     @Specialization
-    protected long div(long left, long right) {
-        long result = left / right;
-        return result;
+    protected boolean equal(long left, long right) {
+        return left == right;
     }
+
     public CoverType getType() {
-        return CoverType.LONG;
-    }    
+        return CoverType.BOOLEAN;
+    }
 }

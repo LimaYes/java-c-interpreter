@@ -22,19 +22,16 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 
-/**
- * The INVERSE "comma" operator. Evaluates both expressions and returns the value of the FIRST.
- * @author gerard
- *
- */
-@NodeInfo(shortName = "+")
+@NodeInfo(shortName = "&")
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
-public abstract class CoverInverseCommaLongNode extends CoverTypedExpressionNode {
+public abstract class SLBinaryLongAndNode extends CoverTypedExpressionNode {
     @Specialization
-    protected long add(long left, Object right) { // FIXME: are there faster ways to ignore the first node?
-        return left;
+    protected long and(long left, long right) {
+        return left & right;
     }
+
+    @Override
     public CoverType getType() {
-        return CoverType.LONG;
+        return CoverType.SIGNED_LONG;
     }
 }

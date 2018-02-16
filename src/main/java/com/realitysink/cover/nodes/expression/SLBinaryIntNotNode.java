@@ -22,16 +22,15 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 
-@NodeInfo(shortName = ">>")
-@NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
-public abstract class SLBinaryShiftRightNode extends CoverTypedExpressionNode {
+@NodeInfo(shortName = "~")
+@NodeChildren({@NodeChild("node")})
+public abstract class SLBinaryIntNotNode extends CoverTypedExpressionNode {
     @Specialization
-    protected long and(long left, long right) {
-        return left >> right;
+    protected int and(int value) {
+        return ~value;
     }
     
-    @Override
     public CoverType getType() {
-        return CoverType.LONG;
-    }    
+        return CoverType.SIGNED_INT;
+    }
 }

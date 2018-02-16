@@ -24,10 +24,10 @@ import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 
 @NodeInfo(shortName = "==")
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
-public abstract class CoverEqualLongNode extends CoverTypedExpressionNode {
+public abstract class CoverEqualSignedIntNode extends CoverTypedExpressionNode {
 
     @Specialization
-    protected boolean equal(long left, long right) {
+    protected boolean equal(int left, int right) {
         return left == right;
     }
 
