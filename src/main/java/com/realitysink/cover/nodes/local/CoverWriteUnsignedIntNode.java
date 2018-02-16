@@ -30,7 +30,7 @@ public abstract class CoverWriteUnsignedIntNode extends CoverTypedExpressionNode
 
     @Specialization
     protected int writeUnsignedInt(VirtualFrame frame, int value) {
-        frame.setLong(getSlot(), value);
+        frame.setInt(getSlot(), value);
         return value;
     }
     

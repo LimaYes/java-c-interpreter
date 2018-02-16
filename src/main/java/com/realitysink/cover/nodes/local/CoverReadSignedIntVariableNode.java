@@ -29,7 +29,8 @@ public abstract class CoverReadSignedIntVariableNode extends CoverTypedExpressio
     protected abstract FrameSlot getSlot();
 
     @Specialization
-    protected long readSignedInt(VirtualFrame frame) {
+    protected int readSignedInt(VirtualFrame frame) {
+
         return FrameUtil.getIntSafe(frame, getSlot());
     }
     

@@ -29,7 +29,7 @@ public abstract class CoverReadDoubleVariableNode extends CoverTypedExpressionNo
     protected abstract FrameSlot getSlot();
 
     @Specialization
-    protected double readLong(VirtualFrame frame) {
+    protected double readDouble(VirtualFrame frame) {
         return FrameUtil.getDoubleSafe(frame, getSlot());
     }
     

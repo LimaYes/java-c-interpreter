@@ -30,7 +30,7 @@ public abstract class CoverWriteSignedIntNode extends CoverTypedExpressionNode {
 
     @Specialization
     protected int writeSignedInt(VirtualFrame frame, int value) {
-        frame.setLong(getSlot(), value);
+        frame.setInt(getSlot(), value);
         return value;
     }
     

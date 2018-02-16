@@ -33,7 +33,7 @@ public abstract class CoverReadObjectVariableNode extends CoverTypedExpressionNo
     protected abstract FrameSlot getSlot();
 
     @Specialization
-    protected Object readLong(VirtualFrame frame) {
+    protected Object readObject(VirtualFrame frame) {
         return FrameUtil.getObjectSafe(frame, getSlot());
     }
 }

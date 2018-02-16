@@ -29,7 +29,7 @@ public abstract class CoverReadFloatVariableNode extends CoverTypedExpressionNod
     protected abstract FrameSlot getSlot();
 
     @Specialization
-    protected float readLong(VirtualFrame frame) {
+    protected float readFloat(VirtualFrame frame) {
         return FrameUtil.getFloatSafe(frame, getSlot());
     }
     
