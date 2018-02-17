@@ -28,6 +28,7 @@ import com.oracle.truffle.api.vm.PolyglotEngine;
 import com.oracle.truffle.api.vm.PolyglotEngine.Instrument;
 import com.oracle.truffle.api.vm.PolyglotEngine.Value;
 import com.oracle.truffle.tools.TruffleProfiler;
+import com.realitysink.cover.parser.CoverParser;
 import com.realitysink.cover.runtime.SLNull;
 import com.realitysink.cover.runtime.SLUndefinedNameException;
 
@@ -47,6 +48,10 @@ public final class CoverMain {
     }
 
     private static void executeSource(Source source, InputStream in, PrintStream out) {
+
+        // init types
+
+
         String runtime = Truffle.getRuntime().getName();
         if (!"Graal Truffle Runtime".equals(runtime)) {
             System.err.println("WARNING: not running on Graal/Truffle but on " + runtime);

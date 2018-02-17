@@ -124,6 +124,10 @@ public class CoverParser {
     public CoverParser(Source source, CoverScope scope) {
         this.source = source;
         this.fileScope = scope;
+
+        scope.addType("long", CoverType.SIGNED_LONG);
+        scope.addType("ulong", CoverType.UNSIGNED_LONG);
+        scope.addType("uint", CoverType.UNSIGNED_INT);
     }
 
     public void parse() throws CoreException {
@@ -925,12 +929,11 @@ public class CoverParser {
                 return CoverType.SIGNED_LONG;
             case CPPASTSimpleDeclSpecifier.t_int:
                 return CoverType.SIGNED_INT;
-            case CPPASTSimpleDeclSpecifier.t_decimal64: // TODO FIXME unsigned types unavailable ... what do we do now?
-                return CoverType.SIGNED_LONG;
             case CPPASTSimpleDeclSpecifier.t_double:
                 return CoverType.DOUBLE;
             case CPPASTSimpleDeclSpecifier.t_float:
                 return CoverType.FLOAT;
+            // More types are initialized in Constructor
 
             default:
                 throw new CoverParseException(node, "unsupported basic type: " + d.getType());

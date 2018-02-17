@@ -1,9 +1,23 @@
 int main() {
 
-    float x = 9.0;
-    x = x-2.0;
-	int g = 0;
-	int h = g-1;
+    long a = 0;
+    long b = a - 1;
+    if (a>b) {
+      printf("Signed longs work as expected.\n");
+    }
+    else {
+      printf("Oops, something went wrong with signed long.\n");
+    }
+
+    ulong c = 0;
+    ulong d = c - 1;
+    if (c<d) {
+      printf("Unsigned longs work as expected.\n");
+    }
+    else {
+      printf("Oops, something went wrong with unsigned long.\n");
+    }
+
 
 	return 0;
 }
