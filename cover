@@ -24,4 +24,4 @@ do
   esac
 done
 
-$JAVACMD $JAVA_ARGS -cp ./target/classes -cp ./target/cover-*.jar com.realitysink.cover.CoverMain $PROGRAM_ARGS
+java $JAVA_ARGS -cp ./target/classes -cp ./target/cover-*.jar com.realitysink.cover.CoverMain $PROGRAM_ARGS

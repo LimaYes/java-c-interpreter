@@ -65,6 +65,28 @@ public class CoverObjectConditionalExpressionNode extends CoverTypedExpressionNo
         }
     }
 
+
+    @Override
+    public int executeInt(VirtualFrame frame) {
+        boolean result;
+        try {
+            result = condition.executeBoolean(frame);
+        } catch (UnexpectedResultException e) {
+            CompilerDirectives.transferToInterpreter();
+            throw new CoverRuntimeException(this, e);
+        }
+        try {
+            if (result) {
+                return positive.executeInt(frame);
+            } else {
+                return negative.executeInt(frame);
+            }
+        } catch (UnexpectedResultException e) {
+            CompilerDirectives.transferToInterpreter();
+            throw new CoverRuntimeException(this, e);
+        }
+    }
+
     @Override
     public double executeDouble(VirtualFrame frame) {
         boolean result;
@@ -86,6 +108,26 @@ public class CoverObjectConditionalExpressionNode extends CoverTypedExpressionNo
         }
     }
 
+    @Override
+    public float executeFloat(VirtualFrame frame) {
+        boolean result;
+        try {
+            result = condition.executeBoolean(frame);
+        } catch (UnexpectedResultException e) {
+            CompilerDirectives.transferToInterpreter();
+            throw new CoverRuntimeException(this, e);
+        }
+        try {
+            if (result) {
+                return positive.executeFloat(frame);
+            } else {
+                return negative.executeFloat(frame);
+            }
+        } catch (UnexpectedResultException e) {
+            CompilerDirectives.transferToInterpreter();
+            throw new CoverRuntimeException(this, e);
+        }
+    }
     @Override
     public CoverType getType() {
         return type;

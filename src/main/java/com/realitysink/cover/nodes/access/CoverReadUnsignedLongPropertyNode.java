@@ -17,7 +17,7 @@ import com.realitysink.cover.runtime.CoverRuntimeException;
 @NodeField(name="property",type=String.class)
 })
 @NodeChild("object")
-public abstract class CoverReadLongPropertyNode extends CoverTypedExpressionNode {
+public abstract class CoverReadUnsignedLongPropertyNode extends CoverTypedExpressionNode {
     @Specialization
     long get(DynamicObject object) {
         Shape shape = object.getShape();

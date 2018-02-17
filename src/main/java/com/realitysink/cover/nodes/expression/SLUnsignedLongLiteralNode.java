@@ -31,18 +31,25 @@ public final class SLUnsignedLongLiteralNode extends CoverTypedExpressionNode {
         this.value = value;
     }
 
-    @Override
-    public long executeLong(VirtualFrame frame) throws UnexpectedResultException {
-        return value;
-    }
 
     @Override
-    public double executeDouble(VirtualFrame frame) throws UnexpectedResultException {
+    public long executeLong(VirtualFrame frame) throws UnexpectedResultException {
         return value;
     }
     @Override
     public int executeInt(VirtualFrame frame) throws UnexpectedResultException {
         return (int)value;
+    }
+
+
+    @Override
+    public double executeDouble(VirtualFrame frame) throws UnexpectedResultException {
+        return value;
+    }
+
+    @Override
+    public float executeFloat(VirtualFrame frame) throws UnexpectedResultException {
+        return value;
     }
     @Override
     public Object executeGeneric(VirtualFrame frame) {

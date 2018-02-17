@@ -44,10 +44,7 @@ import com.realitysink.cover.nodes.CoverType.BasicType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 import com.realitysink.cover.nodes.SLRootNode;
 import com.realitysink.cover.nodes.SLStatementNode;
-import com.realitysink.cover.nodes.access.CoverCreateObjectNode;
-import com.realitysink.cover.nodes.access.CoverReadDoublePropertyNodeGen;
-import com.realitysink.cover.nodes.access.CoverReadFloatPropertyNodeGen;
-import com.realitysink.cover.nodes.access.CoverReadLongPropertyNodeGen;
+import com.realitysink.cover.nodes.access.*;
 import com.realitysink.cover.nodes.call.SLInvokeNode;
 import com.realitysink.cover.nodes.controlflow.SLBlockNode;
 import com.realitysink.cover.nodes.controlflow.SLBreakNode;
@@ -401,13 +398,13 @@ public class CoverParser {
         String field = expression.getFieldName().toString();
         CoverType memberType = ownerExpression.getType().getObjectMembers().get(field);
         if (memberType.getBasicType() == BasicType.UNSIGNED_LONG) {
-            return CoverReadLongPropertyNodeGen.create(ownerExpression, memberType, field);
+            return CoverReadUnsignedLongPropertyNodeGen.create(ownerExpression, memberType, field);
         } else if (memberType.getBasicType() == BasicType.SIGNED_LONG) {
-            return CoverReadLongPropertyNodeGen.create(ownerExpression, memberType, field);
+            return CoverReadSignedLongPropertyNodeGen.create(ownerExpression, memberType, field);
         } else if (memberType.getBasicType() == BasicType.UNSIGNED_INT) {
-            return CoverReadLongPropertyNodeGen.create(ownerExpression, memberType, field);
+            return CoverReadUnsignedIntPropertyNodeGen.create(ownerExpression, memberType, field);
         } else if (memberType.getBasicType() == BasicType.SIGNED_INT) {
-            return CoverReadLongPropertyNodeGen.create(ownerExpression, memberType, field);
+            return CoverReadSignedIntPropertyNodeGen.create(ownerExpression, memberType, field);
         }else if (memberType.getBasicType() == BasicType.DOUBLE) {
             return CoverReadDoublePropertyNodeGen.create(ownerExpression, memberType, field);
         } else if (memberType.getBasicType() == BasicType.FLOAT) {
@@ -854,7 +851,7 @@ public class CoverParser {
                     nodes.add(createSimpleAssignmentNode(node, ref, expression));
                 } else {
                     // FIXME: initialize according to type
-                    if (type.getBasicType() == BasicType.UNSIGNED_LONG || // TODO FIXME JUST WRONG HERE
+                    if (type.getBasicType() == BasicType.UNSIGNED_LONG || type.getBasicType() == BasicType.SIGNED_LONG || type.getBasicType() == BasicType.UNSIGNED_INT || type.getBasicType() == BasicType.SIGNED_INT || // TODO FIXME JUST WRONG HERE
                             type.getBasicType() == BasicType.DOUBLE ||
                             type.getBasicType() == BasicType.FLOAT) {
                         nodes.add(createSimpleAssignmentNode(d, ref, new SLUnsignedLongLiteralNode(0)));
@@ -965,6 +962,7 @@ public class CoverParser {
         System.err.println(nodeMessage(node, "info: " + message));
     }
 
+    // TODO FIXME: Make sure to support all the signed unsigned literals here
     private CoverTypedExpressionNode processLiteral(CoverScope scope, CPPASTLiteralExpression y) {
         if (y.getKind() == IASTLiteralExpression.lk_string_literal) {
             String v = new String(y.getValue());

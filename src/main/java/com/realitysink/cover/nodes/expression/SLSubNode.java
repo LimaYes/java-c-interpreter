@@ -54,6 +54,7 @@ import com.realitysink.cover.nodes.SLBinaryNode;
 @NodeInfo(shortName = "-")
 public abstract class SLSubNode extends SLBinaryNode {
 
+    // TODO FIXME: where is float and int
     @Specialization(rewriteOn = ArithmeticException.class)
     protected long sub(long left, long right) {
         return ExactMath.subtractExact(left, right);

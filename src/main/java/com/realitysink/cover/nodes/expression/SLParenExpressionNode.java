@@ -71,6 +71,11 @@ public class SLParenExpressionNode extends SLExpressionNode {
     }
 
     @Override
+    public int executeInt(VirtualFrame frame) throws UnexpectedResultException {
+        return expression.executeInt(frame);
+    }
+    // TODO FIXME: double float?
+    @Override
     public boolean executeBoolean(VirtualFrame frame) throws UnexpectedResultException {
         return expression.executeBoolean(frame);
     }

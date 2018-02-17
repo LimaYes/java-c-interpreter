@@ -29,19 +29,25 @@ public final class SLUnsignedIntLiteralNode extends CoverTypedExpressionNode {
     public SLUnsignedIntLiteralNode(int value) {
         this.value = value;
     }
-
     @Override
     public long executeLong(VirtualFrame frame) throws UnexpectedResultException {
         return value;
     }
 
     @Override
+    public int executeInt(VirtualFrame frame) throws UnexpectedResultException {
+        return (int)value;
+    }
+
+
+    @Override
     public double executeDouble(VirtualFrame frame) throws UnexpectedResultException {
         return value;
     }
+
     @Override
-    public int executeInt(VirtualFrame frame) throws UnexpectedResultException {
-        return (int)value;
+    public float executeFloat(VirtualFrame frame) throws UnexpectedResultException {
+        return value;
     }
     @Override
     public Object executeGeneric(VirtualFrame frame) {
