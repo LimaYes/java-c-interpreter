@@ -4,6 +4,9 @@ int main() {
 	float x = 1.0;
 	float y = 20000001;
 	float result = x + y;
-	printf("result: %f %f %f\n", result, result/3, result/2+12.3);
+
+	float z = 1.5;
+	z = z + 1;
+	printf("result: %f %f %f %f\n", result, result/3, result/2+12.3, z);
 	return 666;
 }

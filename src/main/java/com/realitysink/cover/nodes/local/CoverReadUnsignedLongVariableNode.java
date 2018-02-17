@@ -32,7 +32,8 @@ public abstract class CoverReadUnsignedLongVariableNode extends CoverTypedExpres
     protected long readUnsignedLong(VirtualFrame frame) {
         return FrameUtil.getLongSafe(frame, getSlot());
     }
-    
+
+
     public CoverType getType() {
         return CoverType.UNSIGNED_LONG;
     }

@@ -18,8 +18,8 @@ int main() {
       printf("Oops, something went wrong with unsigned long.\n");
     }
 
-    long e = 0;
-    long f = e - 1;
+    int e = 0;
+    int f = e - 1;
     if (e>f) {
       printf("Signed ints work as expected.\n");
     }
@@ -27,8 +27,8 @@ int main() {
       printf("Oops, something went wrong with signed int.\n");
     }
 
-    ulong g = 0;
-    ulong h = g - 1;
+    uint g = 0;
+    uint h = g - 1;
     if (g<h) {
       printf("Unsigned ints work as expected.\n");
     }
