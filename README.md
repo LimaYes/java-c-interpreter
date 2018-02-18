@@ -3,9 +3,20 @@
 This Cover fork is an an improvement of the original cover project and supports int/uint, long/ulong as well as float and double datatypes.
 Additionally, it comes along with many built-in mathematical operators which should work out of the box. Please give it a try.
 
+# (Reliably) Supported Datatypes
+
+Datatype | Description
+--- | ---
+int | 32-bit signed integer
+uint | 32-bit unsigned integer
+long | 64-bit signed integer
+ulong | 64-bit unsigned integer
+float | fixed point datatype (32 bit)
+double | double precision datatype (64 bit)
+
 # Supported Math Operators
 
-Operator | LDescription
+Operator | Description
 --- | ---
 sinh( double d ) | Computes hyperbolic sine
 sin( double d ) | Computes sine
