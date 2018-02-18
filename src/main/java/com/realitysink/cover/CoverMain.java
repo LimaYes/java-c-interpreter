@@ -54,17 +54,19 @@ public final class CoverMain {
 
 
         String runtime = Truffle.getRuntime().getName();
-        if (!"Graal Truffle Runtime".equals(runtime)) {
+
+        // We do not want that warning
+        /*if (!"Graal Truffle Runtime".equals(runtime)) {
             System.err.println("WARNING: not running on Graal/Truffle but on " + runtime);
-        }
+        }*/
 
         PolyglotEngine engine = PolyglotEngine.newBuilder().setIn(in).setOut(out).build();
         assert engine.getLanguages().containsKey(CoverLanguage.MIME_TYPE);
 
         Map<String, Instrument> instruments = engine.getInstruments();
-        for (String name : instruments.keySet()) {
+        /*for (String name : instruments.keySet()) {
             System.err.println(name);
-        }
+        }*/
         Instrument profiler = instruments.get(CoverProfiler.ID);
         if (profiler == null) {
           System.err.println("Truffle profiler not available. Might be a class path issue");
@@ -94,7 +96,7 @@ public final class CoverMain {
                 ex.printStackTrace(out);
             }
         }
-        System.err.println("Profiler enabled: " + profiler.isEnabled());
+        //System.err.println("Profiler enabled: " + profiler.isEnabled());
         engine.dispose();
     }
 }

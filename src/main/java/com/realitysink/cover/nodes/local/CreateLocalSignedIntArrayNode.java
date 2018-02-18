@@ -44,6 +44,8 @@ public class CreateLocalSignedIntArrayNode extends SLStatementNode {
             CompilerDirectives.transferToInterpreter();
             throw new CoverRuntimeException(this, e);
         }
-        frame.setObject(frameSlot, new INT32[s]);
+        INT32[] nn = new INT32[s];
+        for(int i=0; i<nn.length; ++i) nn[i] = new INT32(0);
+        frame.setObject(frameSlot, nn);
     }
 }

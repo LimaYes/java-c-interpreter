@@ -142,7 +142,7 @@ public class CoverParser {
     }
     
     private void parseRaw() throws CoreException {
-        System.err.println("Parsing " + source.getPath());
+        //System.err.println("Parsing " + source.getPath());
 
         FileContent fileContent = FileContent.createForExternalFileLocation(source.getPath());
 
@@ -171,7 +171,7 @@ public class CoverParser {
 
         IASTPreprocessorIncludeStatement[] includes = translationUnit.getIncludeDirectives();
         for (IASTPreprocessorIncludeStatement include : includes) {
-            System.err.println("include - " + include.getName());
+            //System.err.println("include - " + include.getName());
         }
         
         // RootNode
@@ -185,9 +185,9 @@ public class CoverParser {
         for (int i = 0; i < level; i++)
             spaces += "  ";
         if (n2 instanceof CoverTypedExpressionNode) {
-            System.err.println(spaces + n2.getClass().getName() + " " + ((CoverTypedExpressionNode)n2).getType());
+            //System.err.println(spaces + n2.getClass().getName() + " " + ((CoverTypedExpressionNode)n2).getType());
         } else {
-            System.err.println(spaces + n2.getClass().getName());
+            //System.err.println(spaces + n2.getClass().getName());
         }
         for (Node n : n2.getChildren()) {
             printTruffleNodes(n, level + 1);
@@ -833,7 +833,7 @@ public class CoverParser {
     }
 
     private SLStatementNode processDeclaration(CoverScope scope, CPPASTSimpleDeclaration node) {
-        printTree(node, 1);
+        //printTree(node, 1);
         
         // NOTE: this can also be a typedef!
         
@@ -867,7 +867,7 @@ public class CoverParser {
                 // we don't support initializers yet, so keep it empty
                 CPPASTArrayDeclarator arrayDeclarator = (CPPASTArrayDeclarator) declarator;
                 CoverTypedExpressionNode size = processExpression(scope, arrayDeclarator.getArrayModifiers()[0].getConstantExpression(), null);
-                System.err.println(name+" declared as array of " + type.getBasicType());
+                //System.err.println(name+" declared as array of " + type.getBasicType());
                 CoverType arrayType = new CoverType(BasicType.ARRAY).setArrayType(type);
                 CoverReference ref = scope.define(node, name, arrayType);
                 if (type.getBasicType() == BasicType.DOUBLE) {

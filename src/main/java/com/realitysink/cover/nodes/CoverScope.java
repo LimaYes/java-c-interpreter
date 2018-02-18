@@ -64,11 +64,11 @@ public class CoverScope {
             FrameSlot slot = frameDescriptor.addFrameSlot(new Object());
             FrameSlotKind frameSlotKind = type.getFrameSlotKind(node);
             slot.setKind(frameSlotKind);
-            System.err.println("added " + slot);
+            //System.err.println("added " + slot);
             ref.setFrameSlot(slot);
         }
         definitions.put(identifier, ref);
-        System.err.println("defined " + identifier + " as " + type.getBasicType());
+        //System.err.println("defined " + identifier + " as " + type.getBasicType());
         return ref;
     }
     
