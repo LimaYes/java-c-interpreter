@@ -46,6 +46,7 @@ import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.ExactMath;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
+import com.realitysink.cover.nodes.INT32;
 import com.realitysink.cover.nodes.SLBinaryNode;
 
 /**
@@ -58,6 +59,11 @@ public abstract class SLSubNode extends SLBinaryNode {
     @Specialization(rewriteOn = ArithmeticException.class)
     protected long sub(long left, long right) {
         return ExactMath.subtractExact(left, right);
+    }
+
+    @Specialization(rewriteOn = ArithmeticException.class)
+    protected INT32 sub(INT32 left, INT32 right) {
+        return INT32.gen(ExactMath.subtractExact(left.value, right.value));
     }
 
     @Specialization

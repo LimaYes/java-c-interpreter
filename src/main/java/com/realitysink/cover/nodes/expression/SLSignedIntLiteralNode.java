@@ -20,36 +20,37 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.realitysink.cover.nodes.INT32;
 
 // TODO FIXME: why dont we have such classes for FLOAT and double? Do we need this stuff at all here?
 @NodeInfo(shortName = "const")
 public final class SLSignedIntLiteralNode extends CoverTypedExpressionNode {
 
-    private final int value;
+    private final INT32 value;
 
-    public SLSignedIntLiteralNode(int value) {
+    public SLSignedIntLiteralNode(INT32 value) {
         this.value = value;
     }
 
 
     @Override
     public long executeLong(VirtualFrame frame) throws UnexpectedResultException {
-        return value;
+        return value.value;
     }
     @Override
-    public int executeInt(VirtualFrame frame) throws UnexpectedResultException {
-        return (int)value;
+    public INT32 executeINT32(VirtualFrame frame) throws UnexpectedResultException {
+        return value;
     }
 
 
     @Override
     public double executeDouble(VirtualFrame frame) throws UnexpectedResultException {
-        return value;
+        return value.value;
     }
 
     @Override
     public float executeFloat(VirtualFrame frame) throws UnexpectedResultException {
-        return value;
+        return value.value;
     }
 
     @Override

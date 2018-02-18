@@ -41,6 +41,7 @@
 package com.realitysink.cover.nodes;
 
 import java.math.BigInteger;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.ImplicitCast;
@@ -59,7 +60,7 @@ import com.realitysink.cover.runtime.SLNull;
  * conversion methods for all types. In this class, we only cover types where the automatically
  * generated ones would not be sufficient.
  */
-@TypeSystem({int.class, long.class, float.class, double.class, BigInteger.class, boolean.class, String.class, SLFunction.class, SLNull.class})
+@TypeSystem({INT32.class, long.class, float.class, double.class, BigInteger.class, boolean.class, String.class, SLFunction.class, SLNull.class})
 @DSLOptions
 public abstract class SLTypes {
 
@@ -109,8 +110,8 @@ public abstract class SLTypes {
     }
 
     @ImplicitCast
-    public static double castDouble(int value) {
-        return (double)value;
+    public static double castDouble(INT32 value) {
+        return (double)value.value;
     }
 
     @ImplicitCast
@@ -124,28 +125,46 @@ public abstract class SLTypes {
     }
 
     @ImplicitCast
-    public static float castFloat(int value) {
-        return (float)value;
+    public static float castFloat(INT32 value) {
+        return (float)value.value;
     }
 
     @ImplicitCast
-    public static int castInt(float value) {
-        return (int)value;
+    @TruffleBoundary
+    public static INT32 castINT32(float value) {
+        return INT32.gen((int)value);
     }
 
     @ImplicitCast
-    public static int castInt(double value) {
-        return (int)value;
+    public static long castLong(double value) {
+        return (long)value;
     }
 
     @ImplicitCast
-    public static int castInt(long value) {
-        return (int)value;
+    public static long castLong(INT32 value) {
+        return (long)value.value;
     }
 
     @ImplicitCast
-    public static boolean castBoolean(int value) {
-        return value != 0;
+    public static long castLong(float value) {
+        return (long)value;
+    }
+
+    @ImplicitCast
+    @TruffleBoundary
+    public static INT32 castINT32(double value) {
+        return INT32.gen((int)value);
+    }
+
+    @ImplicitCast
+    @TruffleBoundary
+    public static INT32 castINT32(long value) {
+        return INT32.gen((int)value);
+    }
+
+    @ImplicitCast
+    public static boolean castBoolean(INT32 value) {
+        return value.value != 0;
     }
 
     @ImplicitCast

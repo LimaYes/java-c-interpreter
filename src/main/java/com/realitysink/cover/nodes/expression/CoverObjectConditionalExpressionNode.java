@@ -8,6 +8,7 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.realitysink.cover.nodes.INT32;
 import com.realitysink.cover.runtime.CoverRuntimeException;
 
 @NodeChildren({@NodeChild("condition"),@NodeChild("positive"),@NodeChild("negative")})
@@ -67,7 +68,7 @@ public class CoverObjectConditionalExpressionNode extends CoverTypedExpressionNo
 
 
     @Override
-    public int executeInt(VirtualFrame frame) {
+    public INT32 executeINT32(VirtualFrame frame) {
         boolean result;
         try {
             result = condition.executeBoolean(frame);
@@ -77,9 +78,9 @@ public class CoverObjectConditionalExpressionNode extends CoverTypedExpressionNo
         }
         try {
             if (result) {
-                return positive.executeInt(frame);
+                return positive.executeINT32(frame);
             } else {
-                return negative.executeInt(frame);
+                return negative.executeINT32(frame);
             }
         } catch (UnexpectedResultException e) {
             CompilerDirectives.transferToInterpreter();

@@ -89,8 +89,8 @@ public abstract class SLExpressionNode extends SLStatementNode {
         return SLTypesGen.expectFloat(executeGeneric(frame));
     }
 
-    public int executeInt(VirtualFrame frame) throws UnexpectedResultException {
-        return SLTypesGen.expectInteger(executeGeneric(frame));
+    public INT32 executeINT32(VirtualFrame frame) throws UnexpectedResultException {
+        return SLTypesGen.expectINT32(executeGeneric(frame));
     }
 
     public boolean executeBoolean(VirtualFrame frame) throws UnexpectedResultException {

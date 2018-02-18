@@ -141,8 +141,8 @@ public class CoverType {
         switch (basicType) {
         case SIGNED_LONG: return true;
         case UNSIGNED_LONG: return true;
-        case SIGNED_INT: return true;
-        case UNSIGNED_INT: return true;
+        case SIGNED_INT: return false;
+        case UNSIGNED_INT: return false;
         case DOUBLE: return true;
         case FLOAT: return true;
         case BOOLEAN: return true;

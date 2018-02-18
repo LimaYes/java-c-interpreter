@@ -21,6 +21,7 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.realitysink.cover.nodes.INT32;
 
 /**
  * The "comma" operator. Evaluates both expressions and returns the value of the second.
@@ -31,7 +32,7 @@ import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
 public abstract class CoverInverseCommaUnsignedIntNode extends CoverTypedExpressionNode {
     @Specialization
-    protected int add(int left, Object right) { // FIXME: are there faster ways to ignore the first node?
+    protected INT32 add(INT32 left, Object right) { // FIXME: are there faster ways to ignore the first node?
         return left;
     }
     public CoverType getType() {

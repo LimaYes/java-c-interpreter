@@ -22,6 +22,7 @@ import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.realitysink.cover.nodes.INT32;
 
 @NodeChild("valueNode")
 @NodeField(name = "slot", type = FrameSlot.class)
@@ -29,8 +30,8 @@ public abstract class CoverWriteSignedIntNode extends CoverTypedExpressionNode {
     protected abstract FrameSlot getSlot();
 
     @Specialization
-    protected int writeSignedInt(VirtualFrame frame, int value) {
-        frame.setInt(getSlot(), value);
+    protected INT32 writeSignedInt(VirtualFrame frame, INT32 value) {
+        frame.setObject(getSlot(), value);
         return value;
     }
     

@@ -49,6 +49,7 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.realitysink.cover.nodes.INT32;
 import com.realitysink.cover.nodes.SLBinaryNode;
 import com.realitysink.cover.runtime.CoverRuntimeException;
 import com.realitysink.cover.runtime.SLFunction;
@@ -70,23 +71,24 @@ public abstract class SLEqualNode extends CoverTypedExpressionNode {
 
 
     // TODO FIXME: float and int pleaaase
+
+
+
+
     @Specialization
     protected boolean equal(long left, long right) {
         return left == right;
     }
 
     @Specialization
-    protected boolean equal(double left, double right) {
-        // FIXME: warn if these are not whole numbers!
-        // throw new CoverRuntimeException(this, "Really? Are you comparing doubles using == ?");
-        return left == right;
-    }
-    
-    @Specialization
     @TruffleBoundary
     protected boolean equal(BigInteger left, BigInteger right) {
         return left.equals(right);
     }
+
+
+
+    
 
     @Specialization
     protected boolean equal(boolean left, boolean right) {

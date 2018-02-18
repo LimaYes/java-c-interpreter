@@ -21,14 +21,14 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.realitysink.cover.nodes.INT32;
 
 @NodeInfo(shortName = "/")
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
 public abstract class CoverDivUnsignedIntNode extends CoverTypedExpressionNode {
     @Specialization
-    protected int div(int left, int right) {
-        int result = Integer.divideUnsigned(left, right);
-        return result;
+    protected INT32 div(INT32 left, INT32 right) {
+        return INT32.gen(Integer.divideUnsigned(left.value, right.value));
     }
     public CoverType getType() {
         return CoverType.UNSIGNED_INT;

@@ -21,14 +21,15 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.realitysink.cover.nodes.INT32;
 
 @NodeInfo(shortName = "*")
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
 public abstract class CoverMulSignedIntNode extends CoverTypedExpressionNode {
 
     @Specialization
-    protected int mul(int left, int right) {
-        return left * right;
+    protected INT32 mul(INT32 left, INT32 right) {
+        return INT32.gen(left.value * right.value);
     }
 
     public CoverType getType() {

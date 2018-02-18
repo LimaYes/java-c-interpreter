@@ -20,11 +20,12 @@ import com.oracle.truffle.api.dsl.NodeChildren;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.realitysink.cover.nodes.INT32;
 
 @NodeChildren({@NodeChild("array"),@NodeChild("expressionNode")})
 public abstract class CoverReadUnsignedIntArrayValueNode extends CoverTypedExpressionNode {
     @Specialization
-    public int readUnsignedInt(int[] array, long index) {
+    public INT32 readUnsignedInt(INT32[] array, long index) {
         return array[(int) index];
     }
     

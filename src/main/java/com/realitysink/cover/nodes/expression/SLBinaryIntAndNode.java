@@ -21,13 +21,14 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.realitysink.cover.nodes.INT32;
 
 @NodeInfo(shortName = "&")
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
 public abstract class SLBinaryIntAndNode extends CoverTypedExpressionNode {
     @Specialization
-    protected int and(int left, int right) {
-        return left & right;
+    protected INT32 and(INT32 left, INT32 right) {
+        return INT32.gen(left.value & right.value);
     }
 
     @Override

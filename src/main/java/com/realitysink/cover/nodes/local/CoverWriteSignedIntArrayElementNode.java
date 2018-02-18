@@ -22,13 +22,14 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.realitysink.cover.nodes.INT32;
 import com.realitysink.cover.runtime.CoverRuntimeException;
 
 @NodeChildren({@NodeChild("array"), @NodeChild("index"), @NodeChild("value")})
 @NodeInfo(shortName="=")
 public abstract class CoverWriteSignedIntArrayElementNode extends CoverTypedExpressionNode {
     @Specialization
-    protected int writeIntArrayElement(int[] array, long index, int value) {
+    protected INT32 writeIntArrayElement(INT32[] array, long index, INT32 value) {
         try {
             array[(int) index] = value;
         } catch (ArrayIndexOutOfBoundsException e) {

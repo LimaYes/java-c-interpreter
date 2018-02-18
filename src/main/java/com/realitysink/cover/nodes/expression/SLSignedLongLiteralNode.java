@@ -20,6 +20,7 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.realitysink.cover.nodes.INT32;
 
 @NodeInfo(shortName = "const")
 public final class SLSignedLongLiteralNode extends CoverTypedExpressionNode {
@@ -36,8 +37,8 @@ public final class SLSignedLongLiteralNode extends CoverTypedExpressionNode {
         return value;
     }
     @Override
-    public int executeInt(VirtualFrame frame) throws UnexpectedResultException {
-        return (int)value;
+    public INT32 executeINT32(VirtualFrame frame) throws UnexpectedResultException {
+        return INT32.gen((int)value);
     }
 
 

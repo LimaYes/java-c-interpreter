@@ -10,6 +10,7 @@ import com.oracle.truffle.api.object.Property;
 import com.oracle.truffle.api.object.Shape;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
+import com.realitysink.cover.nodes.INT32;
 import com.realitysink.cover.runtime.CoverRuntimeException;
 
 @NodeFields({
@@ -19,13 +20,13 @@ import com.realitysink.cover.runtime.CoverRuntimeException;
 @NodeChild("object")
 public abstract class CoverReadSignedIntPropertyNode extends CoverTypedExpressionNode {
     @Specialization
-    int get(DynamicObject object) {
+    INT32 get(DynamicObject object) {
         Shape shape = object.getShape();
         Property property = shape.getProperty(getProperty());
         Location location = property.getLocation();
         Object data = location.get(object,shape);
         try {
-            return (int) data;
+            return (INT32) data;
         } catch (Exception e) {
             throw new CoverRuntimeException(this, e);
         }
