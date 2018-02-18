@@ -112,6 +112,7 @@ Does NOT support the following C++ features:
 * [Graal VM]( http://www.oracle.com/technetwork/oracle-labs/program-languages/overview) on the Oracle Technology Network
 * [Papers on Truffle](http://ssw.jku.at/Research/Projects/JVM/Truffle.html)
 * [Papers on Graal](http://ssw.jku.at/Research/Projects/JVM/Graal.html)
+* [Original Cover on Github](https://github.com/gerard-/cover)
 
 ## License
 
