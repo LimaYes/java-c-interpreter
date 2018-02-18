@@ -24,6 +24,9 @@ import com.realitysink.cover.nodes.INT32;
 import com.realitysink.cover.nodes.SLExpressionNode;
 import com.realitysink.cover.nodes.SLStatementNode;
 import com.realitysink.cover.runtime.CoverRuntimeException;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.SyntaxException;
+
+import java.math.BigInteger;
 
 public class CreateLocalSignedIntArrayNode extends SLStatementNode {
     private final FrameSlot frameSlot;
@@ -38,12 +41,22 @@ public class CreateLocalSignedIntArrayNode extends SLStatementNode {
     @Override
     public void executeVoid(VirtualFrame frame) {
         int s;
-        try {
-            s = (int) size.executeLong(frame);
-        } catch (UnexpectedResultException e) {
-            CompilerDirectives.transferToInterpreter();
-            throw new CoverRuntimeException(this, e);
-        }
+
+        // A rather risky thing but we have no automatic implicit casting of array argument
+        Object o = (Object)size.executeGeneric(frame);
+        if(o instanceof INT32)
+            s = ((INT32) o).value;
+        else if(o instanceof Long)
+            s = (int)(((Long) o).intValue());
+        else if(o instanceof Float)
+            s = (int)(((Float) o).intValue());
+        else if(o instanceof Double)
+            s = (int)(((Double) o).intValue());
+        else if(o instanceof BigInteger)
+            s = (int)(((BigInteger) o).intValue());
+        else
+            throw new CoverRuntimeException(this, "Invalid array parametrization");
+
         INT32[] nn = new INT32[s];
         for(int i=0; i<nn.length; ++i) nn[i] = new INT32(0);
         frame.setObject(frameSlot, nn);

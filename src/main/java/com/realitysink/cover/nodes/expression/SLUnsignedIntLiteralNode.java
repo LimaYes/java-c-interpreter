@@ -26,30 +26,30 @@ import com.realitysink.cover.nodes.INT32;
 @NodeInfo(shortName = "const")
 public final class SLUnsignedIntLiteralNode extends CoverTypedExpressionNode {
 
-    private final int value;
+    private final INT32 value;
 
-    public SLUnsignedIntLiteralNode(int value) {
+    public SLUnsignedIntLiteralNode(INT32 value) {
         this.value = value;
     }
     @Override
     public long executeLong(VirtualFrame frame) throws UnexpectedResultException {
-        return value;
+        return value.value;
     }
 
     @Override
     public INT32 executeINT32(VirtualFrame frame) throws UnexpectedResultException {
-        return INT32.gen((int)value);
+        return INT32.gen((int)value.value);
     }
 
 
     @Override
     public double executeDouble(VirtualFrame frame) throws UnexpectedResultException {
-        return value;
+        return value.value;
     }
 
     @Override
     public float executeFloat(VirtualFrame frame) throws UnexpectedResultException {
-        return value;
+        return value.value;
     }
     @Override
     public Object executeGeneric(VirtualFrame frame) {

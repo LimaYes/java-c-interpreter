@@ -54,6 +54,8 @@ public final class SLSignedIntLiteralNode extends CoverTypedExpressionNode {
         return value.value;
     }
 
+
+
     @Override
     public Object executeGeneric(VirtualFrame frame) {
         return value;
