@@ -43,7 +43,7 @@ fmod ( double x, double y ) | Computes remainder of the floating-point division 
 ## FAQ
 
 * **How fast is it?** For the *mandelbrot* benchmark Cover reaches 70% of the speed of C. See [Performance](PERFORMANCE.md) for details.
-* **Can I use this for real world projects?** No, as only just the parts of C needed to run some toy programs have been implemented. 
+* **Can I use this for real world projects?** If the data types and built-in functions are suiting your needs, then sure!
 
 ## Design
 
