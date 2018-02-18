@@ -19,6 +19,7 @@ atan2( double d, double d ) | Computes arc tangent, using signs to determine qua
 atan( double d ) | Computes arc tangent
 exp( double d ) | Computes e raised to the given power
 log10( double d ) | Computes common (base-10) logarithm
+log2( double d ) | Computes common (base-2) logarithm
 log( double d ) | Computes natural (base-e) logarithm
 pow( double x, double y ) | Computes a number raised to the given power
 sqrt( double d ) | Computes square root
