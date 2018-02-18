@@ -33,14 +33,8 @@ import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
 import com.realitysink.cover.CoverLanguage;
 import com.realitysink.cover.builtins.*;
-import com.realitysink.cover.nodes.CoverNopExpression;
-import com.realitysink.cover.nodes.CoverReference;
-import com.realitysink.cover.nodes.CoverScope;
-import com.realitysink.cover.nodes.CoverType;
+import com.realitysink.cover.nodes.*;
 import com.realitysink.cover.nodes.CoverType.BasicType;
-import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.SLRootNode;
-import com.realitysink.cover.nodes.SLStatementNode;
 import com.realitysink.cover.nodes.access.*;
 import com.realitysink.cover.nodes.call.SLInvokeNode;
 import com.realitysink.cover.nodes.controlflow.SLBlockNode;
@@ -939,7 +933,7 @@ public class CoverParser {
                         if (memberType.getBasicType() == BasicType.UNSIGNED_LONG || memberType.getBasicType() == BasicType.SIGNED_LONG) {
                             initialValue = (long) 0;
                         } else if (memberType.getBasicType() == BasicType.UNSIGNED_INT || memberType.getBasicType() == BasicType.SIGNED_INT) {
-                            initialValue = (int) 0;
+                            initialValue = INT32.gen(0);
                         } else if (memberType.getBasicType() == BasicType.DOUBLE) {
                             initialValue = (double) 0.0;
                         } else if (memberType.getBasicType() == BasicType.FLOAT) {

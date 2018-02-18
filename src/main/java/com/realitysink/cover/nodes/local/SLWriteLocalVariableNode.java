@@ -89,6 +89,15 @@ public abstract class SLWriteLocalVariableNode extends SLExpressionNode {
         return value;
     }
 
+    @Specialization(guards = "isFloatOrIllegal(frame)")
+    protected float writeFloat(VirtualFrame frame, float value) {
+        /* Initialize type on first write of the local variable. No-op if kind is already Long. */
+        getSlot().setKind(FrameSlotKind.Float);
+
+        frame.setFloat(getSlot(), value);
+        return value;
+    }
+
     /**
      * Generic write method that works for all possible types.
      * <p>
@@ -99,7 +108,7 @@ public abstract class SLWriteLocalVariableNode extends SLExpressionNode {
      * {@link Object}, it is guaranteed to never fail, i.e., once we are in this specialization the
      * node will never be re-specialized.
      */
-    @Specialization(contains = {"writeLong", "writeBoolean"})
+    @Specialization(contains = {"writeLong", "writeBoolean", "writeFloat"})
     protected Object write(VirtualFrame frame, Object value) {
         /*
          * Regardless of the type before, the new and final type of the local variable is Object.
@@ -128,5 +137,9 @@ public abstract class SLWriteLocalVariableNode extends SLExpressionNode {
 
     protected boolean isBooleanOrIllegal(VirtualFrame frame) {
         return getSlot().getKind() == FrameSlotKind.Boolean || getSlot().getKind() == FrameSlotKind.Illegal;
+    }
+
+    protected boolean isFloatOrIllegal(VirtualFrame frame) {
+        return getSlot().getKind() == FrameSlotKind.Float || getSlot().getKind() == FrameSlotKind.Illegal;
     }
 }

@@ -87,14 +87,24 @@ public abstract class SLReadLocalVariableNode extends SLExpressionNode {
          */
         return FrameUtil.getDoubleSafe(frame, getSlot());
     }
-    
+
+    @Specialization(guards = "isFloat(frame)")
+    protected double readFloat(VirtualFrame frame) {
+        /*
+         * When the FrameSlotKind is Long, we know that only primitive long values have ever been
+         * written to the local variable. So we do not need to check that the frame really contains
+         * a primitive long value.
+         */
+        return FrameUtil.getFloatSafe(frame, getSlot());
+    }
+
 
     @Specialization(guards = "isBoolean(frame)")
     protected boolean readBoolean(VirtualFrame frame) {
         return FrameUtil.getBooleanSafe(frame, getSlot());
     }
 
-    @Specialization(contains = {"readLong", "readBoolean", "readDouble"})
+    @Specialization(contains = {"readLong", "readBoolean", "readDouble", "readFloat"})
     protected Object readObject(VirtualFrame frame) {
         if (!frame.isObject(getSlot())) {
             /*
@@ -132,4 +142,9 @@ public abstract class SLReadLocalVariableNode extends SLExpressionNode {
     protected boolean isDouble(VirtualFrame frame) {
         return getSlot().getKind() == FrameSlotKind.Double;
     }
+
+    protected boolean isFloat(VirtualFrame frame) {
+        return getSlot().getKind() == FrameSlotKind.Float;
+    }
+
 }

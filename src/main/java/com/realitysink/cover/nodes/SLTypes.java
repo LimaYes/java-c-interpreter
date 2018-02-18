@@ -136,6 +136,12 @@ public abstract class SLTypes {
     }
 
     @ImplicitCast
+    @TruffleBoundary
+    public static INT32 castINT32(SLNull s) {
+        return null;
+    }
+
+    @ImplicitCast
     public static long castLong(double value) {
         return (long)value;
     }
