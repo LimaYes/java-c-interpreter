@@ -6,7 +6,7 @@ int main() {
 		printf("i=%d\n",i);
 	}
 	if (i>0) {
-		int j;
+		int j = 0;
 		printf("j=%d (should be 0)\n",j);
 	}
 	printf("i=%d (should be 33)\n",i);
