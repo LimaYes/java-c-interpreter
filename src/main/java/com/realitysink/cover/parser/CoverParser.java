@@ -31,11 +31,7 @@ import com.oracle.truffle.api.object.Shape;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
 import com.realitysink.cover.CoverLanguage;
-import com.realitysink.cover.builtins.CoverFWriteBuiltinNodeGen;
-import com.realitysink.cover.builtins.CoverPrintfBuiltin;
-import com.realitysink.cover.builtins.CoverPutcBuiltinNodeGen;
-import com.realitysink.cover.builtins.SLPrintlnBuiltin;
-import com.realitysink.cover.builtins.SLPrintlnBuiltinFactory;
+import com.realitysink.cover.builtins.*;
 import com.realitysink.cover.nodes.CoverNopExpression;
 import com.realitysink.cover.nodes.CoverReference;
 import com.realitysink.cover.nodes.CoverScope;
@@ -1058,8 +1054,52 @@ public class CoverParser {
             return new CoverNewArrayNode(type, argumentArray[0]);
         } else if ("free".equals(rawName)) {
             return new CoverNopExpression();
+        } else if ("sin".equals(rawName)) {
+            return CoverSinBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("sinh".equals(rawName)) {
+            return CoverSinhBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("sqrt".equals(rawName)) {
+            return CoverSqrtBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("tan".equals(rawName)) {
+            return CoverTanBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("tanh".equals(rawName)) {
+            return CoverTanhBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("acos".equals(rawName)) {
+            return CoverAcosBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("atan".equals(rawName)) {
+            return CoverAtanBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("atan2".equals(rawName)) {
+            return CoverAtan2BuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
+        } else if ("ceil".equals(rawName)) {
+            return CoverCeilBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("cos".equals(rawName)) {
+            return CoverCosBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("cosh".equals(rawName)) {
+            return CoverCoshBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("exp".equals(rawName)) {
+            return CoverExpBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("exp2".equals(rawName)) {
+            return CoverExp2BuiltinNodeGen.create(argumentArray[0]);
+        } else if ("log".equals(rawName)) {
+            return CoverLogBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("log2".equals(rawName)) {
+            return CoverLog2BuiltinNodeGen.create(argumentArray[0]);
+        } else if ("log10".equals(rawName)) {
+            return CoverLog10BuiltinNodeGen.create(argumentArray[0]);
+        } else if ("fabs".equals(rawName)) {
+            return CoverFabsBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("abs".equals(rawName)) {
+            return CoverAbsBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("floor".equals(rawName)) {
+            return CoverFloorBuiltinNodeGen.create(argumentArray[0]);
+        } else if ("gcd".equals(rawName)) {
+            return CoverGcdBuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
+        } else if ("pow".equals(rawName)) {
+            return CoverPowBuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
+        } else if ("fmod".equals(rawName)) {
+            return CoverFmodBuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
         } else {
-            CoverTypedExpressionNode function = processExpression(scope, functionCall.getFunctionNameExpression(), null);
+            CoverTypedExpressionNode function = processExpression(scope, functionCall.getFunctionNameExpression(), CoverType.DOUBLE);
             return new SLInvokeNode(function, argumentArray);
         }
     }

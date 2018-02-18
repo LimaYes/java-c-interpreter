@@ -7,7 +7,8 @@ int main() {
     printf("%d\n",h);
     uint j = h;
     j = j << b;
-    j = j | b;
+    double w = abs(sin(1.5));
+    printf("%f\n", w);
 
 
 
