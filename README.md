@@ -75,6 +75,10 @@ Does NOT support the following C++ features:
 * Execute `sh ./installcdt.sh`
 * Execute `mvn compile package`
 
+## And Once Again In Pictures
+
+![Alt Text](https://github.com/OrdinaryDude/coverplus/raw/master/insta.gif)
+
 ## IDE Setup 
 
 ### Eclipse
