@@ -1,6 +1,30 @@
 # Cover
 
-Cover is a safe subset of C++ on the JVM using Graal/Truffle. If you want full C++ support, but don't need memory safety, take a look at [Sulong](https://github.com/graalvm/sulong).
+This Cover fork is an an improvement of the original cover project and supports int/uint, long/ulong as well as float and double datatypes.
+Additionally, it comes along with many built-in mathematical operators which should work out of the box. Please give it a try.
+
+# Supported Math Operators
+
+sinh( double d )             Computes hyperbolic sine
+sin( double d )              Computes sine
+cosh( double d )             Computes hyperbolic cosine
+cos( double d )              Computes cosine
+tanh( double d )             Computes hyperbolic tangent
+tan( double d )              Computes tangent
+asin( double d )             Computes arc sine
+acos( double d )             Computes arc cosine
+atan2( double d, double d )  Computes arc tangent, using signs to determine quadrants
+atan( double d )             Computes arc tangent
+exp( double d )              Computes e raised to the given power
+log10( double d )            Computes common (base-10) logarithm
+log( double d )              Computes natural (base-e) logarithm
+pow( double x, double y )    Computes a number raised to the given power 
+sqrt( double d )             Computes square root
+ceil( double d )             Computes smallest integer not less than the given value
+floor( double d )            Computes largest integer not greater than the given value
+fabs( double d )             Computes absolute value of a floating-point value
+abs( int i )                 Computes absolute value of an integral value
+fmod ( double x, double y )  Computes remainder of the floating-point division operation
 
 ## FAQ
 
@@ -34,8 +58,8 @@ Does NOT support the following C++ features:
   http://www.oracle.com/technetwork/oracle-labs/program-languages/downloads
 * Unpack the downloaded `graalvm_*.tar.gz` into `cover/graalvm`, or add a symlink.
 * Verify that the file `cover/graalvm/bin/java` exists and is executable
-* Execute `mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=lib/org.eclipse.cdt.core_6.0.0.201607151550.jar -DgroupId=org.eclipse.cdt -DartifactId=cdt-core -Dversion=6.0.0 -Dpackaging=jar`
-* Execute `mvn package`
+* Execute `sh ./installcdt.sh`
+* Execute `mvn compile package`
 
 ## IDE Setup 
 
@@ -58,16 +82,6 @@ Does NOT support the following C++ features:
 ## Running
 
 * Execute `./cover tests/HelloWorld.cover` to run a simple language source file.
-* Execute `gcc -x c++ -o hello tests/HelloWorld.cover` and then `./hello` to verify that the cover file is also valid C++.
-* Execute `./cover -disassemble tests/SumPrint.cover` to see assembly code for Truffle compiled functions.
-
-## IGV
-
-* Download the Ideal Graph Visualizer (IGV) from
-  https://lafo.ssw.uni-linz.ac.at/pub/idealgraphvisualizer/
-* Unpack the downloaded `.zip` file  
-* Execute `bin/idealgraphvsiualizer` to start IGV
-* Execute `./sl -dump tests/SumPrint.cover` to dump graphs to IGV.
 
 ## Debugging
 
@@ -84,7 +98,6 @@ Does NOT support the following C++ features:
 * [Graal VM]( http://www.oracle.com/technetwork/oracle-labs/program-languages/overview) on the Oracle Technology Network
 * [Papers on Truffle](http://ssw.jku.at/Research/Projects/JVM/Truffle.html)
 * [Papers on Graal](http://ssw.jku.at/Research/Projects/JVM/Graal.html)
-* [Sulong](https://github.com/graalvm/sulong)
 
 ## License
 
