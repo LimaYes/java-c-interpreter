@@ -5,26 +5,28 @@ Additionally, it comes along with many built-in mathematical operators which sho
 
 # Supported Math Operators
 
-sinh( double d )             Computes hyperbolic sine
-sin( double d )              Computes sine
-cosh( double d )             Computes hyperbolic cosine
-cos( double d )              Computes cosine
-tanh( double d )             Computes hyperbolic tangent
-tan( double d )              Computes tangent
-asin( double d )             Computes arc sine
-acos( double d )             Computes arc cosine
-atan2( double d, double d )  Computes arc tangent, using signs to determine quadrants
-atan( double d )             Computes arc tangent
-exp( double d )              Computes e raised to the given power
-log10( double d )            Computes common (base-10) logarithm
-log( double d )              Computes natural (base-e) logarithm
-pow( double x, double y )    Computes a number raised to the given power 
-sqrt( double d )             Computes square root
-ceil( double d )             Computes smallest integer not less than the given value
-floor( double d )            Computes largest integer not greater than the given value
-fabs( double d )             Computes absolute value of a floating-point value
-abs( int i )                 Computes absolute value of an integral value
-fmod ( double x, double y )  Computes remainder of the floating-point division operation
+Operator | LDescription
+--- | ---
+sinh( double d ) | Computes hyperbolic sine
+sin( double d ) | Computes sine
+cosh( double d ) | Computes hyperbolic cosine
+cos( double d ) | Computes cosine
+tanh( double d ) | Computes hyperbolic tangent
+tan( double d ) | Computes tangent
+asin( double d ) | Computes arc sine
+acos( double d ) | Computes arc cosine
+atan2( double d, double d ) | Computes arc tangent, using signs to determine quadrants
+atan( double d ) | Computes arc tangent
+exp( double d ) | Computes e raised to the given power
+log10( double d ) | Computes common (base-10) logarithm
+log( double d ) | Computes natural (base-e) logarithm
+pow( double x, double y ) | Computes a number raised to the given power
+sqrt( double d ) | Computes square root
+ceil( double d ) | Computes smallest integer not less than the given value
+floor( double d ) | Computes largest integer not greater than the given value
+fabs( double d ) | Computes absolute value of a floating-point value
+abs( int i ) | Computes absolute value of an integral value
+fmod ( double x, double y ) | Computes remainder of the floating-point division operation
 
 ## FAQ
 
