@@ -3,6 +3,11 @@ int main() {
 
     uint b = 0;
     b = b + 1;
+    long h = b;
+    printf("%d\n",h);
+    uint j = h;
+    j = j << b;
+    j = j | b;
 
 
 

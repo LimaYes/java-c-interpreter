@@ -449,7 +449,7 @@ public class CoverParser {
 
     private CoverTypedExpressionNode processBinaryExpression(CoverScope scope, CPPASTBinaryExpression expression) {
         int operator = expression.getOperator();
-        CoverTypedExpressionNode result;
+        CoverTypedExpressionNode result = null;
         if (operator == CPPASTBinaryExpression.op_lessThan) {
             CoverTypedExpressionNode leftNode = processExpression(scope, expression.getOperand1(), null);
             CoverTypedExpressionNode rightNode = processExpression(scope, expression.getOperand2(), null);
@@ -508,7 +508,21 @@ public class CoverParser {
                 result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryIntOrNodeGen.create(source, change));
             else
                 result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryLongOrNodeGen.create(source, change));
-        } else if (operator == CPPASTBinaryExpression.op_shiftRightAssign) {
+        } else if (operator == CPPASTBinaryExpression.op_binaryOr) {
+            CoverTypedExpressionNode change = processExpression(scope, expression.getOperand2(), null);
+            CoverTypedExpressionNode source = processExpression(scope, expression.getOperand1(), null);
+            if(source.getType() == CoverType.UNSIGNED_INT || source.getType() == CoverType.SIGNED_INT)
+                result = SLBinaryIntOrNodeGen.create(source, change);
+            else
+                result = SLBinaryLongOrNodeGen.create(source, change);
+        } else if (operator == CPPASTBinaryExpression.op_binaryAnd) {
+            CoverTypedExpressionNode change = processExpression(scope, expression.getOperand2(), null);
+            CoverTypedExpressionNode source = processExpression(scope, expression.getOperand1(), null);
+            if(source.getType() == CoverType.UNSIGNED_INT || source.getType() == CoverType.SIGNED_INT)
+                result = SLBinaryIntAndNodeGen.create(source, change);
+            else
+                result = SLBinaryLongAndNodeGen.create(source, change);
+        }   else if (operator == CPPASTBinaryExpression.op_shiftRightAssign) {
             CoverTypedExpressionNode change = processExpression(scope, expression.getOperand2(), null);
             CoverTypedExpressionNode source = processExpression(scope, expression.getOperand1(), null);
             if(source.getType() == CoverType.UNSIGNED_INT || source.getType() == CoverType.SIGNED_INT)
@@ -522,13 +536,42 @@ public class CoverParser {
                 result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryIntShiftLeftNodeGen.create(source, change));
             else
                 result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryLongShiftLeftNodeGen.create(source, change));        } else if (operator == CPPASTBinaryExpression.op_binaryOrAssign) {
+        } else if (operator == CPPASTBinaryExpression.op_binaryOrAssign) {
             CoverTypedExpressionNode change = processExpression(scope, expression.getOperand2(), null);
             CoverTypedExpressionNode source = processExpression(scope, expression.getOperand1(), null);
             if(source.getType() == CoverType.UNSIGNED_INT || source.getType() == CoverType.SIGNED_INT)
                 result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryIntOrNodeGen.create(source, change));
             else
                 result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryLongOrNodeGen.create(source, change));
-        } else if (operator == CPPASTBinaryExpression.op_modulo) {
+        } else if (operator == CPPASTBinaryExpression.op_binaryXorAssign) {
+            CoverTypedExpressionNode change = processExpression(scope, expression.getOperand2(), null);
+            CoverTypedExpressionNode source = processExpression(scope, expression.getOperand1(), null);
+            if(source.getType() == CoverType.UNSIGNED_INT || source.getType() == CoverType.SIGNED_INT)
+                result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryIntXorNodeGen.create(source, change));
+            else
+                result = createWriteVariableNode(scope, expression.getOperand1(), SLBinaryLongXorNodeGen.create(source, change));
+        } else if (operator == CPPASTBinaryExpression.op_binaryXor) {
+            CoverTypedExpressionNode change = processExpression(scope, expression.getOperand2(), null);
+            CoverTypedExpressionNode source = processExpression(scope, expression.getOperand1(), null);
+            if(source.getType() == CoverType.UNSIGNED_INT || source.getType() == CoverType.SIGNED_INT)
+                result = SLBinaryIntXorNodeGen.create(source, change);
+            else
+                result = SLBinaryLongXorNodeGen.create(source, change);
+        } else if (operator == CPPASTBinaryExpression.op_shiftLeft) {
+            CoverTypedExpressionNode change = processExpression(scope, expression.getOperand2(), null);
+            CoverTypedExpressionNode source = processExpression(scope, expression.getOperand1(), null);
+            if(source.getType() == CoverType.UNSIGNED_INT || source.getType() == CoverType.SIGNED_INT)
+                result = SLBinaryIntShiftLeftNodeGen.create(source, change);
+            else
+                result = SLBinaryLongShiftLeftNodeGen.create(source, change);
+        } else if (operator == CPPASTBinaryExpression.op_shiftRight) {
+            CoverTypedExpressionNode change = processExpression(scope, expression.getOperand2(), null);
+            CoverTypedExpressionNode source = processExpression(scope, expression.getOperand1(), null);
+            if(source.getType() == CoverType.UNSIGNED_INT || source.getType() == CoverType.SIGNED_INT)
+                result = SLBinaryIntOrNodeGen.create(source, change);
+            else
+                result = SLBinaryLongOrNodeGen.create(source, change);
+        }  else if (operator == CPPASTBinaryExpression.op_modulo) {
             CoverTypedExpressionNode leftNode = processExpression(scope, expression.getOperand1(), null);
             CoverTypedExpressionNode rightNode = processExpression(scope, expression.getOperand2(), null);
             result = createModNode(expression, leftNode, rightNode);
