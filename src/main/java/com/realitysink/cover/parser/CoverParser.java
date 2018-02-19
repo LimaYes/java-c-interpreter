@@ -797,6 +797,8 @@ public class CoverParser {
         int operator = node.getOperator();
         final int change;
         CoverTypedExpressionNode readNode = processExpression(scope, node.getOperand(), null);
+        CoverType type = readNode.getType();
+
         if (operator == IASTUnaryExpression.op_postFixIncr || operator == IASTUnaryExpression.op_prefixIncr) {
             change = 1;
         } else if (operator == IASTUnaryExpression.op_postFixDecr || operator == IASTUnaryExpression.op_prefixDecr) {
@@ -804,7 +806,17 @@ public class CoverParser {
         } else if (operator == IASTUnaryExpression.op_bracketedPrimary) {
             return readNode;
         } else if (operator == IASTUnaryExpression.op_tilde) {
-            return SLBinaryLongNotNodeGen.create(readNode);
+            if(type == CoverType.SIGNED_INT || type == CoverType.UNSIGNED_INT)
+                return SLBinaryIntNotNodeGen.create(readNode);
+            else
+                return SLBinaryLongNotNodeGen.create(readNode);
+        } else if (operator == IASTUnaryExpression.op_minus) {
+            if(type == CoverType.SIGNED_INT || type == CoverType.UNSIGNED_INT)
+                return SLIntFlipsignNodeGen.create(readNode);
+            else
+                return SLLongFlipsignNodeGen.create(readNode);
+        } else if (operator == IASTUnaryExpression.op_plus) {
+            return readNode; // This operator is not really needed
         } else {
             throw new CoverParseException(node, "Unsupported operator type " + operator);
         }
