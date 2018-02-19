@@ -39,6 +39,10 @@ floor( double d ) | Computes largest integer not greater than the given value
 fabs( double d ) | Computes absolute value of a floating-point value
 abs( int i ) | Computes absolute value of an integral value
 fmod ( double x, double y ) | Computes remainder of the floating-point division operation
+rotl32 ( int x, int y) | Performs a 32-bit left bit rotation
+rotr32 ( int x, int y) | Performs a 32-bit right bit rotation
+rotl64 ( long x, long y) | Performs a 64-bit left bit rotation
+rotr64 ( long x, long y) | Performs a 64-bit right bit rotation
 
 ## FAQ
 

@@ -1105,6 +1105,14 @@ public class CoverParser {
             return CoverPowBuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
         } else if ("fmod".equals(rawName)) {
             return CoverFmodBuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
+        } else if ("rotl32".equals(rawName)) {
+            return CoverRotl32BuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
+        } else if ("rotr32".equals(rawName)) {
+            return CoverRotl32BuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
+        } else if ("rotl64".equals(rawName)) {
+            return CoverRotl32BuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
+        } else if ("rotr64".equals(rawName)) {
+            return CoverRotl32BuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
         } else {
             CoverTypedExpressionNode function = processExpression(scope, functionCall.getFunctionNameExpression(), CoverType.DOUBLE);
             return new SLInvokeNode(function, argumentArray);
