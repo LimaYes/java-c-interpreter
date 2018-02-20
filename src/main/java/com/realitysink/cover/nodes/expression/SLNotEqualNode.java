@@ -40,8 +40,6 @@
  */
 package com.realitysink.cover.nodes.expression;
 
-import java.math.BigInteger;
-
 import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.NodeChildren;
@@ -50,10 +48,10 @@ import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 import com.realitysink.cover.nodes.INT32;
-import com.realitysink.cover.nodes.SLBinaryNode;
-import com.realitysink.cover.runtime.CoverRuntimeException;
 import com.realitysink.cover.runtime.SLFunction;
 import com.realitysink.cover.runtime.SLNull;
+
+import java.math.BigInteger;
 
 /**
  * The {@code ==} operator of SL is defined on all types. Therefore, we need a
@@ -65,30 +63,30 @@ import com.realitysink.cover.runtime.SLNull;
  * Note that we do not need the analogous {@code !=} operator, because we can just
  * {@link SLLogicalNotNode negate} the {@code ==} operator.
  */
-@NodeInfo(shortName = "==")
+@NodeInfo(shortName = "!=")
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
-public abstract class SLEqualNode extends CoverTypedExpressionNode {
+public abstract class SLNotEqualNode extends CoverTypedExpressionNode {
 
 
     @Specialization
-    protected boolean equal(long left, long right) {
-        return left == right;
+    protected boolean nequal(long left, long right) {
+        return left != right;
     }
 
     @Specialization
     @TruffleBoundary
-    protected boolean equal(BigInteger left, BigInteger right) {
-        return left.equals(right);
+    protected boolean nequal(BigInteger left, BigInteger right) {
+        return !left.equals(right);
     }
 
     @Specialization
-    protected boolean equal(boolean left, boolean right) {
-        return left == right;
+    protected boolean nequal(boolean left, boolean right) {
+        return left != right;
     }
 
     @Specialization
-    protected boolean equal(String left, String right) {
-        return left.equals(right);
+    protected boolean nequal(String left, String right) {
+        return !left.equals(right);
     }
 
     @Specialization
@@ -97,13 +95,13 @@ public abstract class SLEqualNode extends CoverTypedExpressionNode {
          * Our function registry maintains one canonical SLFunction object per function name, so we
          * do not need equals().
          */
-        return left == right;
+        return left != right;
     }
 
     @Specialization
-    protected boolean equal(SLNull left, SLNull right) {
+    protected boolean nequal(SLNull left, SLNull right) {
         /* There is only the singleton instance of SLNull, so we do not need equals(). */
-        return left == right;
+        return left != right;
     }
 
     /**
@@ -120,9 +118,9 @@ public abstract class SLEqualNode extends CoverTypedExpressionNode {
      * wrong return value is "false".
      */
     @Specialization(guards = "left.getClass() != right.getClass()")
-    protected boolean equal(Object left, Object right) {
+    protected boolean nequal(Object left, Object right) {
         assert !left.equals(right);
-        return false;
+        return true;
     }
     
     public CoverType getType() {

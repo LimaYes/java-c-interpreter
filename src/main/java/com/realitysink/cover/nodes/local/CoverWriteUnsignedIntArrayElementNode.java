@@ -30,14 +30,23 @@ import com.realitysink.cover.runtime.CoverRuntimeException;
 @NodeInfo(shortName="=")
 public abstract class CoverWriteUnsignedIntArrayElementNode extends CoverTypedExpressionNode {
     @Specialization
-    protected INT32 writeUnsignedIntArrayElement(INT32[] array, long index, INT32 value) {
+    protected INT32 writeUnsignedIntArrayElement(INT32[] array, Long index, Object value) {
         try {
-            array[(int) index] = value;
+            if(value instanceof INT32)
+                array[(int) index] = (INT32) value;
+            else if(value instanceof Long)
+                array[(int) index] = INT32.gen((int)value);
+            else if(value instanceof Float)
+                array[(int) index] = INT32.gen((int)value);
+            else if(value instanceof Double)
+                array[(int) index] = INT32.gen((int)value);
+            else if(value instanceof Boolean)
+                array[(int) index] = INT32.gen(((boolean)value==true)?1:0);
         } catch (ArrayIndexOutOfBoundsException e) {
             CompilerDirectives.transferToInterpreter();
             throw new CoverRuntimeException(this, "index " + index + " out of bounds");
         }
-        return value;
+        return array[(int) index];
     }
 
     public CoverType getType() {

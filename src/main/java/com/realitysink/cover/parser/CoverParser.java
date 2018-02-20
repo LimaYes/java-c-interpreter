@@ -566,6 +566,10 @@ public class CoverParser {
             CoverTypedExpressionNode leftNode = processExpression(scope, expression.getOperand1(), null);
             CoverTypedExpressionNode rightNode = processExpression(scope, expression.getOperand2(), null);
             result = createModNode(expression, leftNode, rightNode);
+        }  else if (operator == CPPASTBinaryExpression.op_notequals) {
+            CoverTypedExpressionNode leftNode = processExpression(scope, expression.getOperand1(), null);
+            CoverTypedExpressionNode rightNode = processExpression(scope, expression.getOperand2(), null);
+            result = SLNotEqualNodeGen.create(leftNode, rightNode);
         } else {
             throw new CoverParseException(expression, "unknown operator type " + operator);
         }
