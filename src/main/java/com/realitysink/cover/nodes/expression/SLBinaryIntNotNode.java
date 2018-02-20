@@ -22,14 +22,13 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.INT32;
 
 @NodeInfo(shortName = "~")
 @NodeChildren({@NodeChild("node")})
 public abstract class SLBinaryIntNotNode extends CoverTypedExpressionNode {
     @Specialization
-    protected INT32 not(INT32 left) {
-        return INT32.gen(~left.value);
+    protected long not(long left) {
+        return ~((int)left);
     }
     
     public CoverType getType() {

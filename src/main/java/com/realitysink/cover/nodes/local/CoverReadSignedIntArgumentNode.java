@@ -45,7 +45,6 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.profiles.BranchProfile;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.INT32;
 import com.realitysink.cover.runtime.CoverRuntimeException;
 import com.realitysink.cover.slparser.SLNodeFactory;
 
@@ -72,10 +71,10 @@ public abstract class CoverReadSignedIntArgumentNode extends CoverTypedExpressio
     }
 
     @Specialization
-    public INT32 getSignedInt(VirtualFrame frame) {
+    public long getSignedInt(VirtualFrame frame) {
         Object[] args = frame.getArguments();
         if (index < args.length) {
-            return (INT32) args[index];
+            return (int)args[index];
         } else {
             /* In the interpreter, record profiling information that the branch was used. */
             outOfBoundsTaken.enter();

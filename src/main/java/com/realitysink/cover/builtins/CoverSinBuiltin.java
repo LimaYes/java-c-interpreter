@@ -16,21 +16,12 @@
  */
 package com.realitysink.cover.builtins;
 
-import com.oracle.truffle.api.CompilerAsserts;
-import com.oracle.truffle.api.CompilerDirectives.TruffleBoundary;
 import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.NodeChildren;
 import com.oracle.truffle.api.dsl.Specialization;
-import com.oracle.truffle.api.frame.VirtualFrame;
-import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.INT32;
-import com.realitysink.cover.nodes.SLExpressionNode;
-import com.realitysink.cover.runtime.CoverRuntimeException;
-
-import java.io.IOException;
 
 @NodeInfo(shortName = "sin")
 @NodeChildren({@NodeChild("a")})

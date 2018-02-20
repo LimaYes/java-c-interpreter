@@ -20,7 +20,6 @@ import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import com.realitysink.cover.nodes.INT32;
 import com.realitysink.cover.nodes.SLExpressionNode;
 import com.realitysink.cover.nodes.SLStatementNode;
 import com.realitysink.cover.runtime.CoverRuntimeException;
@@ -38,14 +37,15 @@ public class CreateLocalUnsignedIntArrayNode extends SLStatementNode {
     @Override
     public void executeVoid(VirtualFrame frame) {
         int s;
+
+        // A rather risky thing but we have no automatic implicit casting of array argument
         try {
             s = (int) size.executeLong(frame);
         } catch (UnexpectedResultException e) {
             CompilerDirectives.transferToInterpreter();
             throw new CoverRuntimeException(this, e);
         }
-        INT32[] nn = new INT32[s];
-        for(int i=0; i<nn.length; ++i) nn[i] = new INT32(0);
-        frame.setObject(frameSlot, nn);
+
+        frame.setObject(frameSlot, new long[s]);
     }
 }

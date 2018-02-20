@@ -28,7 +28,7 @@ import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 public abstract class CoverEqualSignedIntNode extends CoverTypedExpressionNode {
 
     @Specialization
-    protected boolean equal(int left, int right) {
+    protected boolean equal(long left, long right) {
         return left == right;
     }
 

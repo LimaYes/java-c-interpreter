@@ -23,7 +23,6 @@ import com.oracle.truffle.api.frame.FrameUtil;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.INT32;
 
 @NodeField(name = "slot", type = FrameSlot.class)
 public abstract class CoverReadUnsignedIntVariableNode extends CoverTypedExpressionNode {
@@ -31,8 +30,8 @@ public abstract class CoverReadUnsignedIntVariableNode extends CoverTypedExpress
     protected abstract FrameSlot getSlot();
 
     @Specialization
-    protected INT32 readUnsignedInt(VirtualFrame frame) {
-        return (INT32) FrameUtil.getObjectSafe(frame, getSlot());
+    protected long readUnsignedInt(VirtualFrame frame) {
+        return (int) FrameUtil.getLongSafe(frame, getSlot());
     }
     
     public CoverType getType() {

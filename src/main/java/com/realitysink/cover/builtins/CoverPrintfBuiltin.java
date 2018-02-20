@@ -23,7 +23,6 @@ import com.oracle.truffle.api.nodes.ExplodeLoop;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.INT32;
 import com.realitysink.cover.nodes.SLExpressionNode;
 
 @NodeInfo(shortName = "printf")
@@ -43,8 +42,6 @@ public class CoverPrintfBuiltin extends CoverTypedExpressionNode {
         Object[] printfArguments = new Object[arguments.length-1];
         for (int i=1;i<arguments.length;i++) {
             Object f = arguments[i].executeGeneric(frame);
-            if(f instanceof INT32)
-                f = ((INT32) f).value;
             printfArguments[i-1] = f;
         }
         doPrintf(formatString, printfArguments);

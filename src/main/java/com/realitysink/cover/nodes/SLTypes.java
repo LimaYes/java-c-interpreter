@@ -60,7 +60,7 @@ import com.realitysink.cover.runtime.SLNull;
  * conversion methods for all types. In this class, we only cover types where the automatically
  * generated ones would not be sufficient.
  */
-@TypeSystem({INT32.class, long.class, float.class, double.class, BigInteger.class, boolean.class, String.class, SLFunction.class, SLNull.class})
+@TypeSystem({long.class, float.class, double.class, BigInteger.class, boolean.class, String.class, SLFunction.class, SLNull.class})
 @DSLOptions
 public abstract class SLTypes {
 
@@ -110,11 +110,6 @@ public abstract class SLTypes {
     }
 
     @ImplicitCast
-    public static double castDouble(INT32 value) {
-        return (double)value.value;
-    }
-
-    @ImplicitCast
     public static float castFloat(long value) {
         return value;
     }
@@ -124,22 +119,6 @@ public abstract class SLTypes {
         return (float)value;
     }
 
-    @ImplicitCast
-    public static float castFloat(INT32 value) {
-        return (float)value.value;
-    }
-
-    @ImplicitCast
-    @TruffleBoundary
-    public static INT32 castINT32(float value) {
-        return INT32.gen((int)value);
-    }
-
-    @ImplicitCast
-    @TruffleBoundary
-    public static INT32 castINT32(SLNull s) {
-        return null;
-    }
 
     @ImplicitCast
     public static long castLong(double value) {
@@ -147,31 +126,10 @@ public abstract class SLTypes {
     }
 
     @ImplicitCast
-    public static long castLong(INT32 value) {
-        return (long)value.value;
-    }
-
-    @ImplicitCast
     public static long castLong(float value) {
         return (long)value;
     }
 
-    @ImplicitCast
-    @TruffleBoundary
-    public static INT32 castINT32(double value) {
-        return INT32.gen((int)value);
-    }
-
-    @ImplicitCast
-    @TruffleBoundary
-    public static INT32 castINT32(long value) {
-        return INT32.gen((int)value);
-    }
-
-    @ImplicitCast
-    public static boolean castBoolean(INT32 value) {
-        return value.value != 0;
-    }
 
     @ImplicitCast
     public static boolean castBoolean(long value) {

@@ -23,16 +23,15 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.INT32;
 import com.realitysink.cover.runtime.CoverRuntimeException;
 
 @NodeChildren({@NodeChild("array"), @NodeChild("index"), @NodeChild("value")})
 @NodeInfo(shortName="=")
 public abstract class CoverWriteSignedIntArrayElementNode extends CoverTypedExpressionNode {
     @Specialization
-    protected INT32 writeIntArrayElement(INT32[] array, long index, INT32 value) {
+    protected long writeIntArrayElement(long[] array, long index, long value) {
         try {
-            array[(int) index] = value;
+            array[(int) index] = (int)value;
         } catch (ArrayIndexOutOfBoundsException e) {
             CompilerDirectives.transferToInterpreter();
             throw new CoverRuntimeException(this, "index " + index + " out of bounds");

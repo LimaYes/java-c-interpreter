@@ -45,7 +45,6 @@ import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.Instrumentable;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import com.realitysink.cover.nodes.SLTypesGen;
 
 /**
  * Base class for all SL nodes that produce a value and therefore benefit from type specialization.
@@ -89,9 +88,6 @@ public abstract class SLExpressionNode extends SLStatementNode {
         return SLTypesGen.expectFloat(executeGeneric(frame));
     }
 
-    public INT32 executeINT32(VirtualFrame frame) throws UnexpectedResultException {
-        return SLTypesGen.expectINT32(executeGeneric(frame));
-    }
 
     public boolean executeBoolean(VirtualFrame frame) throws UnexpectedResultException {
         return SLTypesGen.expectBoolean(executeGeneric(frame));

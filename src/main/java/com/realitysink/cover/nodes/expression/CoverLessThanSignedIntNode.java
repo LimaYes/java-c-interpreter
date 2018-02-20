@@ -22,14 +22,13 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.INT32;
 
 @NodeInfo(shortName = "<")
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
 public abstract class CoverLessThanSignedIntNode extends CoverTypedExpressionNode {
     @Specialization
-    protected boolean less(INT32 left, INT32 right) {
-        return left.value < right.value;
+    protected boolean op(long left, long right) {
+        return left < right;
     }
     public CoverType getType() {
         return CoverType.BOOLEAN;

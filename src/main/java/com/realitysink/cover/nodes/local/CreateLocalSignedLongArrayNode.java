@@ -20,10 +20,11 @@ import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import com.realitysink.cover.nodes.INT32;
 import com.realitysink.cover.nodes.SLExpressionNode;
 import com.realitysink.cover.nodes.SLStatementNode;
 import com.realitysink.cover.runtime.CoverRuntimeException;
+
+import java.math.BigInteger;
 
 public class CreateLocalSignedLongArrayNode extends SLStatementNode {
     private final FrameSlot frameSlot;
@@ -40,12 +41,12 @@ public class CreateLocalSignedLongArrayNode extends SLStatementNode {
         int s;
 
         // A rather risky thing but we have no automatic implicit casting of array argument
-        Object o = (Object)size.executeGeneric(frame);
-        if(o instanceof INT32)
-            s = ((INT32) o).value;
-        else
-            s = (int)o;
-
+        try {
+            s = (int) size.executeLong(frame);
+        } catch (UnexpectedResultException e) {
+            CompilerDirectives.transferToInterpreter();
+            throw new CoverRuntimeException(this, e);
+        }
         frame.setObject(frameSlot, new long[s]);
     }
 }

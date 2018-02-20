@@ -22,14 +22,14 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.INT32;
 
 @NodeInfo(shortName = "<<")
 @NodeChildren({@NodeChild("leftNode"), @NodeChild("rightNode")})
 public abstract class SLBinaryIntShiftLeftNode extends CoverTypedExpressionNode {
     @Specialization
-    protected INT32 shl(INT32 left, INT32 right) {
-        return INT32.gen(left.value << right.value);
+    protected long op(long left, long right) {
+        int res = (int)left << (int)right;
+        return res;
     }
     
     @Override

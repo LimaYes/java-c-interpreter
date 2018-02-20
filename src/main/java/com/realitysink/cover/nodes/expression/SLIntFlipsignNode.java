@@ -22,14 +22,14 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.INT32;
 
 @NodeInfo(shortName = "-")
 @NodeChildren({@NodeChild("node")})
 public abstract class SLIntFlipsignNode extends CoverTypedExpressionNode {
     @Specialization
-    protected INT32 flip(INT32 value) {
-        return INT32.gen(-value.value);
+    protected long op(long left) {
+        int res = -(int)left;
+        return res;
     }
     
     public CoverType getType() {

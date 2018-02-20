@@ -22,15 +22,14 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
-import com.realitysink.cover.nodes.INT32;
 
 @NodeInfo(shortName = "rotl32")
 @NodeChildren({@NodeChild("j"), @NodeChild("k")})
 public abstract class CoverRotl32Builtin extends CoverTypedExpressionNode {
 
     @Specialization
-    public INT32 rotl32(INT32 j,INT32 k) {
-        return INT32.gen(Integer.rotateLeft(j.value, k.value));
+    public long rotl32(long j,long k) {
+        return Integer.rotateLeft((int)j, (int)k);
     }
 
     @Override

@@ -949,7 +949,7 @@ public class CoverParser {
                         if (memberType.getBasicType() == BasicType.UNSIGNED_LONG || memberType.getBasicType() == BasicType.SIGNED_LONG) {
                             initialValue = (long) 0;
                         } else if (memberType.getBasicType() == BasicType.UNSIGNED_INT || memberType.getBasicType() == BasicType.SIGNED_INT) {
-                            initialValue = INT32.gen(0);
+                            initialValue = (long) 0;
                         } else if (memberType.getBasicType() == BasicType.DOUBLE) {
                             initialValue = (double) 0.0;
                         } else if (memberType.getBasicType() == BasicType.FLOAT) {

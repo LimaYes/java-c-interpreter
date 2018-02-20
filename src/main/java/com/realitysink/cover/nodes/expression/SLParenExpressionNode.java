@@ -43,7 +43,6 @@ package com.realitysink.cover.nodes.expression;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
-import com.realitysink.cover.nodes.INT32;
 import com.realitysink.cover.nodes.SLExpressionNode;
 
 /**
@@ -71,10 +70,6 @@ public class SLParenExpressionNode extends SLExpressionNode {
         return expression.executeLong(frame);
     }
 
-    @Override
-    public INT32 executeINT32(VirtualFrame frame) throws UnexpectedResultException {
-        return expression.executeINT32(frame);
-    }
     // TODO FIXME: double float?
     @Override
     public boolean executeBoolean(VirtualFrame frame) throws UnexpectedResultException {
