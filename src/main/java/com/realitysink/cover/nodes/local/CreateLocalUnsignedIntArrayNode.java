@@ -48,6 +48,6 @@ public class CreateLocalUnsignedIntArrayNode extends SLStatementNode {
         }
 
 
-        SingletonGlobalMaterializedFrame.getMe().setObject(frameSlot, new long[s]);
+        frame.setObject(frameSlot, new long[s]);
     }
 }

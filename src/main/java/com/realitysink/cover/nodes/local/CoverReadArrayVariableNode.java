@@ -21,6 +21,7 @@ import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameUtil;
 import com.oracle.truffle.api.frame.VirtualFrame;
+import com.realitysink.cover.SingletonGlobalMaterializedFrame;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 
@@ -32,7 +33,10 @@ public abstract class CoverReadArrayVariableNode extends CoverTypedExpressionNod
     @Specialization
     protected Object readObject(VirtualFrame frame) {
 
-        return FrameUtil.getObjectSafe(frame, getSlot());
+        Object obj = FrameUtil.getObjectSafe(frame, getSlot());
+        if(obj == null)
+            obj = FrameUtil.getObjectSafe(SingletonGlobalMaterializedFrame.getMe(), getSlot());
+        return obj;
     }
     
     public CoverType getType() {
