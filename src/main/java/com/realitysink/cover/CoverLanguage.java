@@ -20,18 +20,25 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.oracle.truffle.api.CallTarget;
-import com.oracle.truffle.api.CompilerAsserts;
-import com.oracle.truffle.api.TruffleLanguage;
+import com.oracle.truffle.api.*;
 import com.oracle.truffle.api.debug.DebuggerTags;
+import com.oracle.truffle.api.frame.FrameDescriptor;
 import com.oracle.truffle.api.frame.MaterializedFrame;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.instrumentation.ProvidedTags;
 import com.oracle.truffle.api.instrumentation.StandardTags;
 import com.oracle.truffle.api.nodes.Node;
+import com.oracle.truffle.api.nodes.RootNode;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.tools.TruffleProfiler;
-import com.realitysink.cover.nodes.CoverScope;
+import com.realitysink.cover.nodes.*;
+import com.realitysink.cover.nodes.call.SLInvokeNode;
+import com.realitysink.cover.nodes.controlflow.SLBlockNode;
+import com.realitysink.cover.nodes.controlflow.SLFunctionBodyNode;
+import com.realitysink.cover.nodes.expression.CoverFunctionLiteralNode;
 import com.realitysink.cover.parser.CoverParseException;
 import com.realitysink.cover.parser.CoverParser;
 import com.realitysink.cover.runtime.SLContext;
@@ -69,7 +76,21 @@ public final class CoverLanguage extends TruffleLanguage<SLContext> {
             throw new IOException(ex);
         }
 
-        return scope.findReference("_init").getFunction().getCallTarget();
+        SLFunction main = scope.findReference("main").getFunction();
+
+        List<SLStatementNode> invoker = new ArrayList<>();
+        for(SLStatementNode sl : scope.getGlobaldefs())
+            invoker.add(sl);
+        // todo: howto invoke main here????????
+
+        invoker.add(new SLInvokeNode(new CoverFunctionLiteralNode(main), new SLExpressionNode[0]));
+
+        SLStatementNode[] globStatements = invoker.toArray(new SLStatementNode[invoker.size()]);
+        SLBlockNode blk = new SLBlockNode(globStatements);
+        SLFunctionBodyNode bodfun = new SLFunctionBodyNode(blk);
+        SLRootNode root = new SLRootNode(SingletonGlobalMaterializedFrame.getMe().getFrameDescriptor(), bodfun, null, "tmp47258");
+
+        return Truffle.getRuntime().createCallTarget(root);
     }
 
     @Override

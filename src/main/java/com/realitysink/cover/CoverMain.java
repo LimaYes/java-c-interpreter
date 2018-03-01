@@ -39,6 +39,8 @@ public final class CoverMain {
      * The main entry point.
      */
     public static void main(String[] args) throws IOException {
+
+
         Source source;
         if (args.length == 0) {
             source = Source.fromReader(new InputStreamReader(System.in), "<stdin>").withMimeType(CoverLanguage.MIME_TYPE);
@@ -50,10 +52,8 @@ public final class CoverMain {
 
     private static void executeSource(Source source, InputStream in, PrintStream out) {
 
-        // init types
-
-
         String runtime = Truffle.getRuntime().getName();
+
 
         // We do not want that warning
         /*if (!"Graal Truffle Runtime".equals(runtime)) {

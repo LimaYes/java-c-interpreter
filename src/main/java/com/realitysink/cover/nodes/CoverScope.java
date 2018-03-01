@@ -16,9 +16,12 @@
  */
 package com.realitysink.cover.nodes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.realitysink.cover.SingletonGlobalMaterializedFrame;
 import org.eclipse.cdt.core.dom.ast.IASTNode;
 
 import com.oracle.truffle.api.frame.FrameDescriptor;
@@ -27,17 +30,25 @@ import com.oracle.truffle.api.frame.FrameSlotKind;
 import com.realitysink.cover.nodes.CoverType.BasicType;
 import com.realitysink.cover.parser.CoverParseException;
 import com.realitysink.cover.runtime.SLFunction;
+import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTSimpleDeclaration;
 
 public class CoverScope {
     private FrameDescriptor frameDescriptor = new FrameDescriptor();
     private Map<String,CoverReference> definitions = new HashMap<>();
     private Map<String,CoverType> types = new HashMap<>();
     private CoverScope parent;
-    
+    private List<SLStatementNode> globaldefs = new ArrayList<>();
+
+    public List<SLStatementNode> getGlobaldefs() {
+        return globaldefs;
+    }
+
     public CoverScope(CoverScope parent) {
         this.parent = parent;
         if (parent != null) {
             this.frameDescriptor = parent.frameDescriptor;
+        }else{
+            this.frameDescriptor = SingletonGlobalMaterializedFrame.getMe().getFrameDescriptor();
         }
     }
     public FrameDescriptor getFrameDescriptor() {
@@ -56,7 +67,7 @@ public class CoverScope {
     
     public CoverReference define(IASTNode node, String identifier, CoverType type) {
         if (definitions.containsKey(identifier)) {
-            throw new CoverParseException(node, "identifier already exists in this scope");
+            throw new CoverParseException(node, "identifier " + identifier + " already exists in this scope");
         }
         CoverReference ref = new CoverReference(type); 
         if (type.getBasicType() != BasicType.FUNCTION) {
@@ -84,6 +95,16 @@ public class CoverScope {
             return parent.findType(name);
         } else {
             return null;
+        }
+    }
+
+    public CoverScope getParent() {
+        return parent;
+    }
+
+    public void addGlobalDef(SLStatementNode slStatementNode) {
+        if(this.parent == null){
+            this.globaldefs.add((SLStatementNode) slStatementNode);
         }
     }
 }

@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int u[100];
+
+int main() {
+
+
+    int size=20;
+    int local_array[44];
+
+	for (int l_i=0;l_i<size;l_i++) {
+		u[l_i] = size - l_i;
+		u[l_i] += 100;
+		u[l_i]--;
+	}
+	for (int j=0;j<size;j++) {
+		printf("u[%d]=%d\n",j, u[j]);
+	}
+	return 0;
+}

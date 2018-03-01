@@ -122,17 +122,10 @@ public class CoverParser {
     }
 
     public void parse() throws CoreException {
+
+
         parseRaw();
-        if (fileScope.findReference("main") != null) {
-            // add init function
-            CoverParser parser;
-            try {
-                parser = new CoverParser(Source.fromFileName(System.getProperty("user.dir") + "/runtime/init.cover"), fileScope);
-            } catch (IOException e) {
-                throw new CoverParseException(null, "could not include _init", e);
-            }
-            parser.parseRaw();
-        }
+
     }
     
     private void parseRaw() throws CoreException {
@@ -167,11 +160,13 @@ public class CoverParser {
         for (IASTPreprocessorIncludeStatement include : includes) {
             //System.err.println("include - " + include.getName());
         }
-        
+
         // RootNode
         for (IASTNode node : translationUnit.getChildren()) {
             processStatement(fileScope, node);
         }
+
+
     }
 
     private void printTruffleNodes(Node n2, int level) {
@@ -895,6 +890,9 @@ public class CoverParser {
                 } else {
                     throw new CoverParseException(node, "unsupported array type " + type.getBasicType());
                 }
+                if(scope.getParent()==null){
+                    scope.addGlobalDef(nodes.get(0));
+                }
             } else if (declarator instanceof CPPASTDeclarator) {
                 CPPASTDeclarator d = (CPPASTDeclarator) declarators[i];
                 //System.err.println(name+" declared as " + frameSlot.getKind());
@@ -1060,11 +1058,6 @@ public class CoverParser {
             return CoverFWriteBuiltinNodeGen.create(argumentArray[0], argumentArray[1], argumentArray[2], argumentArray[3]);
         } else if ("putc".equals(rawName)) {
             return CoverPutcBuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
-        } else if ("malloc".equals(rawName)) {
-            info(node, "inserting malloc for type " + type);
-            return new CoverNewArrayNode(type, argumentArray[0]);
-        } else if ("free".equals(rawName)) {
-            return new CoverNopExpression();
         } else if ("sin".equals(rawName)) {
             return CoverSinBuiltinNodeGen.create(argumentArray[0]);
         } else if ("sinh".equals(rawName)) {

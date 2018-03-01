@@ -70,6 +70,10 @@ public final class SLFunctionBodyNode extends SLExpressionNode {
     private final BranchProfile exceptionTaken = BranchProfile.create();
     private final BranchProfile nullTaken = BranchProfile.create();
 
+    public SLStatementNode getBodyNode() {
+        return bodyNode;
+    }
+
     public SLFunctionBodyNode(SLStatementNode bodyNode) {
         this.bodyNode = bodyNode;
         addRootTag();

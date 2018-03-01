@@ -20,6 +20,7 @@ import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import com.realitysink.cover.SingletonGlobalMaterializedFrame;
 import com.realitysink.cover.nodes.SLExpressionNode;
 import com.realitysink.cover.nodes.SLStatementNode;
 import com.realitysink.cover.runtime.CoverRuntimeException;
@@ -46,6 +47,7 @@ public class CreateLocalUnsignedIntArrayNode extends SLStatementNode {
             throw new CoverRuntimeException(this, e);
         }
 
-        frame.setObject(frameSlot, new long[s]);
+
+        SingletonGlobalMaterializedFrame.getMe().setObject(frameSlot, new long[s]);
     }
 }

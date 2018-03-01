@@ -31,6 +31,7 @@ public abstract class CoverReadArrayVariableNode extends CoverTypedExpressionNod
 
     @Specialization
     protected Object readObject(VirtualFrame frame) {
+
         return FrameUtil.getObjectSafe(frame, getSlot());
     }
     
