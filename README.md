@@ -1,4 +1,4 @@
-# Cover (Reloaded)
+# Java-c-interpreter (Based on Cover)
 
 This Cover fork is an an improvement of the original cover project and supports int/uint, long/ulong as well as float and double datatypes.
 Additionally, it comes along with many built-in mathematical operators which should work out of the box. Please give it a try.
