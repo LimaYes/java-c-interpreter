@@ -86,14 +86,7 @@ public class CoverScope {
             //System.err.println("added " + slot);
             ref.setFrameSlot(slot);
 
-            if(type.getBasicType() == BasicType.ARRAY){
-                System.out.println("Registering coverscope SIG_INT_ARR in Frameslot: " + frameDescriptor.toString() + " {ID: " + identifier + "}");
-            }
 
-            if(type.getBasicType() == BasicType.SIGNED_INT) {
-                System.out.println("Registering coverscope  SIG_INT_NOARR in Frameslot: " + frameDescriptor.toString() + " {ID: " + identifier + "}");
-
-            }
         }
         definitions.put(identifier, ref);
         //System.err.println("defined " + identifier + " as " + type.getBasicType());

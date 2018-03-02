@@ -39,7 +39,6 @@ public abstract class CoverReadArrayVariableNode extends CoverTypedExpressionNod
 
     @Specialization
     protected Object readObject(VirtualFrame frame) {
-        System.out.println("Reading Variable Node: " + frame.toString() + " ... descriptor = " + frame.getFrameDescriptor());
 
         Object firstTry = getScope().getHeapObject(getSlot());
 
