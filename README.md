@@ -75,16 +75,11 @@ Does NOT support the following C++ features:
 
 ## Installation
 
-You can actually skip all these steps except the last one. While the GraalVM is a nice thing to have, everything should still work somewhat with the original stock Java VM.
+While this whole thing runs great with the GraalVM, let's skip it for now and go with the stock JVM.
 
 * Clone the repository using
-  `git clone https://github.com/gerard-/cover.git`
-* Download Graal VM Development Kit from 
-  http://www.oracle.com/technetwork/oracle-labs/program-languages/downloads
-* Unpack the downloaded `graalvm_*.tar.gz` into `cover/graalvm`, or add a symlink.
-* Verify that the file `cover/graalvm/bin/java` exists and is executable
-* Execute `sh ./installcdt.sh`
-* Execute `mvn compile package`
+  `git clone https://github.com/OrdinaryDude/java-c-interpreter.git`
+* Go into the checked-out folder and execute `mvn compile package`
 
 ## IDE Setup 
 
@@ -102,7 +97,7 @@ You can actually skip all these steps except the last one. While the GraalVM is 
 ### IntelliJ IDEA
 * Tested with IntelliJ 2016.1.3 Community Edition
 * Open IntelliJ IDEA
-* File -> New -> Project from existing Sources -> Select `cover` folder -> Click next and keep everything default on several screens -> Finish
+* File -> New -> Project from existing Sources -> Select `java-c-interpreter` folder -> Click next and keep everything default on several screens -> Finish
 
 ## Running
 
