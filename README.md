@@ -49,11 +49,6 @@ rotr32 ( int x, int y) | Performs a 32-bit right bit rotation
 rotl64 ( long x, long y) | Performs a 64-bit left bit rotation
 rotr64 ( long x, long y) | Performs a 64-bit right bit rotation
 
-## FAQ
-
-* **How fast is it?** For the *mandelbrot* benchmark Cover reaches 70% of the speed of C. See [Performance](PERFORMANCE.md) for details.
-* **Can I use this for real world projects?** If the data types and built-in functions are suiting your needs, then sure!
-
 ## Design
 
 Cover aims to support the following C++ features:
