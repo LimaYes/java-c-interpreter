@@ -75,6 +75,8 @@ Does NOT support the following C++ features:
 
 ## Installation
 
+You can actually skip all these steps except the last one. While the GraalVM is a nice thing to have, everything should still work somewhat with the original stock Java VM.
+
 * Clone the repository using
   `git clone https://github.com/gerard-/cover.git`
 * Download Graal VM Development Kit from 
