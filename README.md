@@ -3,6 +3,11 @@
 This Cover fork is an an improvement of the original cover project and supports int/uint, long/ulong as well as float and double datatypes.
 Additionally, it comes along with many built-in mathematical operators which should work out of the box. Please give it a try.
 
+# Quirky On-going Work
+
+Please note, that the array implementation is far from perfect.
+The global (and local) arrays are just working so-so, and their scope is not reflecting how arrays behave in C. For now, this is enough but for some more generic use, these features will need some more work. Hence, do not use this in productive environments and especially not when you are not 100% sure what you are doing. Generally speaking, use this code at your own risk.
+
 # (Reliably) Supported Datatypes
 
 Datatype | Description
