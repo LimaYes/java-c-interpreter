@@ -55,4 +55,8 @@ public final class SLUnsignedLongLiteralNode extends CoverTypedExpressionNode {
     public CoverType getType() {
         return CoverType.UNSIGNED_LONG;
     }
+
+    public long getValue() {
+        return value;
+    }
 }

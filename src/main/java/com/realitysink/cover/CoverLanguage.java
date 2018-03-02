@@ -78,19 +78,8 @@ public final class CoverLanguage extends TruffleLanguage<SLContext> {
 
         SLFunction main = scope.findReference("main").getFunction();
 
-        List<SLStatementNode> invoker = new ArrayList<>();
-        for(SLStatementNode sl : scope.getGlobaldefs())
-            invoker.add(sl);
-        // todo: howto invoke main here????????
 
-        invoker.add(new SLInvokeNode(new CoverFunctionLiteralNode(main), new SLExpressionNode[0]));
-
-        SLStatementNode[] globStatements = invoker.toArray(new SLStatementNode[invoker.size()]);
-        SLBlockNode blk = new SLBlockNode(globStatements);
-        SLFunctionBodyNode bodfun = new SLFunctionBodyNode(blk);
-        SLRootNode root = new SLRootNode(SingletonGlobalMaterializedFrame.getMe().getFrameDescriptor(), bodfun, null, "tmp47258");
-
-        return Truffle.getRuntime().createCallTarget(root);
+        return main.getCallTarget();
     }
 
     @Override

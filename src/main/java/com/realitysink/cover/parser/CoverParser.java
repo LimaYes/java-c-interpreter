@@ -32,6 +32,7 @@ import com.oracle.truffle.api.object.Shape;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
 import com.realitysink.cover.CoverLanguage;
+import com.realitysink.cover.SingletonGlobalMaterializedFrame;
 import com.realitysink.cover.builtins.*;
 import com.realitysink.cover.nodes.*;
 import com.realitysink.cover.nodes.CoverType.BasicType;
@@ -48,6 +49,7 @@ import com.realitysink.cover.nodes.local.*;
 import com.realitysink.cover.runtime.SLFunction;
 import com.realitysink.cover.runtime.SLObjectType;
 
+import com.realitysink.cover.runtime.SingletonFrame;
 import org.eclipse.cdt.core.dom.ast.ExpansionOverlapsBoundaryException;
 import org.eclipse.cdt.core.dom.ast.IASTCompoundStatement;
 import org.eclipse.cdt.core.dom.ast.IASTDeclSpecifier;
@@ -417,17 +419,17 @@ public class CoverParser {
             throw new CoverParseException(expression, "does not reference an array");
         }
         if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.UNSIGNED_LONG) {
-            return CoverReadUnsignedLongArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
+            return CoverReadUnsignedLongArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot(), scope), processExpression(scope, subscript, null));
         } else if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.SIGNED_LONG) {
-            return CoverReadSignedLongArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
+            return CoverReadSignedLongArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot(), scope), processExpression(scope, subscript, null));
         } else if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.UNSIGNED_INT) {
-            return CoverReadUnsignedIntArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
+            return CoverReadUnsignedIntArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot(), scope), processExpression(scope, subscript, null));
         } else if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.SIGNED_INT) {
-            return CoverReadSignedIntArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
+            return CoverReadSignedIntArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot(), scope), processExpression(scope, subscript, null));
         } else if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.DOUBLE) {
-            return CoverReadDoubleArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
+            return CoverReadDoubleArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot(), scope), processExpression(scope, subscript, null));
         } else if (ref.getType().getTypeOfArrayContents().getBasicType() == BasicType.FLOAT) {
-            return CoverReadFloatArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot()), processExpression(scope, subscript, null));
+            return CoverReadFloatArrayValueNodeGen.create(CoverReadArrayVariableNodeGen.create(ref.getFrameSlot(), scope), processExpression(scope, subscript, null));
         } else {
             throw new CoverParseException(expression, "unsupported array type " + ref.getType().getTypeOfArrayContents().getBasicType());
         }
@@ -737,7 +739,7 @@ public class CoverParser {
             if (frameSlot == null) throw new CoverParseException(node, "no frameslot");
             if (ref.getType().getBasicType() != BasicType.ARRAY)
                 throw new CoverParseException(node, "is not an array");
-            CoverReadArrayVariableNode arrayExpression = CoverReadArrayVariableNodeGen.create(frameSlot);
+            CoverReadArrayVariableNode arrayExpression = CoverReadArrayVariableNodeGen.create(ref.getFrameSlot(), scope);
             BasicType elementType = ref.getType().getTypeOfArrayContents().getBasicType();
             if (elementType == BasicType.UNSIGNED_LONG) {
                 return CoverWriteUnsignedLongArrayElementNodeGen.create(arrayExpression, indexExpression, value);
@@ -886,13 +888,11 @@ public class CoverParser {
                 } else if (type.getBasicType() == BasicType.UNSIGNED_INT) {
                     nodes.add(new CreateLocalUnsignedIntArrayNode(ref.getFrameSlot(), size));
                 } else if (type.getBasicType() == BasicType.SIGNED_INT) {
-                    nodes.add(new CreateLocalSignedIntArrayNode(ref.getFrameSlot(), size));
+                    nodes.add(new CreateLocalSignedIntArrayNode(ref.getFrameSlot(), scope, size));
                 } else {
                     throw new CoverParseException(node, "unsupported array type " + type.getBasicType());
                 }
-                if(scope.getParent()==null){
-                    scope.addGlobalDef(nodes.get(0));
-                }
+
             } else if (declarator instanceof CPPASTDeclarator) {
                 CPPASTDeclarator d = (CPPASTDeclarator) declarators[i];
                 //System.err.println(name+" declared as " + frameSlot.getKind());
@@ -1134,7 +1134,7 @@ public class CoverParser {
                 } else if (ref.getType().getBasicType().equals(BasicType.FLOAT)) {
                     return CoverReadFloatVariableNodeGen.create(ref.getFrameSlot());
                 } else if (ref.getType().getBasicType().equals(BasicType.ARRAY)) {
-                    return CoverReadArrayVariableNodeGen.create(ref.getFrameSlot());
+                    return CoverReadArrayVariableNodeGen.create(ref.getFrameSlot(), scope);
                 } else if (ref.getType().getBasicType().equals(BasicType.OBJECT)) {
                     return CoverReadObjectVariableNodeGen.create(ref.getType(), ref.getFrameSlot());
                 } else {

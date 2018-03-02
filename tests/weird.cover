@@ -1,0 +1,9 @@
+#include <stdio.h>
+
+int u[2];
+
+int main() {
+    u[0]=666;
+    printf("Secret number: %d, and this one should be zero: %d\n", u[0], u[1]);
+	return 0;
+}

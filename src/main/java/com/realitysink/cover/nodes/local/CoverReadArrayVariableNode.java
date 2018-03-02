@@ -16,28 +16,36 @@
  */
 package com.realitysink.cover.nodes.local;
 
+import com.oracle.truffle.api.dsl.NodeChild;
 import com.oracle.truffle.api.dsl.NodeField;
+import com.oracle.truffle.api.dsl.NodeFields;
 import com.oracle.truffle.api.dsl.Specialization;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.FrameUtil;
+import com.oracle.truffle.api.frame.MaterializedFrame;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.realitysink.cover.SingletonGlobalMaterializedFrame;
+import com.realitysink.cover.nodes.CoverScope;
 import com.realitysink.cover.nodes.CoverType;
 import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 
-@NodeField(name = "slot", type = FrameSlot.class)
+@NodeFields({
+        @NodeField(name = "slot", type = FrameSlot.class),
+        @NodeField(name = "scope", type = CoverScope.class)
+})
 public abstract class CoverReadArrayVariableNode extends CoverTypedExpressionNode {
-
     protected abstract FrameSlot getSlot();
+    protected abstract CoverScope getScope();
 
     @Specialization
     protected Object readObject(VirtualFrame frame) {
+        System.out.println("Reading Variable Node: " + frame.toString() + " ... descriptor = " + frame.getFrameDescriptor());
 
-        Object obj = FrameUtil.getObjectSafe(frame, getSlot());
-        if(obj == null)
-            obj = FrameUtil.getObjectSafe(SingletonGlobalMaterializedFrame.getMe(), getSlot());
-        return obj;
+        Object firstTry = getScope().getHeapObject(getSlot());
+
+        return firstTry;
     }
+
     
     public CoverType getType() {
         return CoverType.ARRAY;

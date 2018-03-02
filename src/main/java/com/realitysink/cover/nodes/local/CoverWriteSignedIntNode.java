@@ -31,6 +31,8 @@ public abstract class CoverWriteSignedIntNode extends CoverTypedExpressionNode {
 
     @Specialization
     protected long writeSignedInt(VirtualFrame frame, long value) {
+        System.out.println("Writing SIG_INT_NOARR in Frameslot: " + frame.toString() + " ... descriptor = " + frame.getFrameDescriptor());
+
         frame.setLong(getSlot(), value);
         return value;
     }

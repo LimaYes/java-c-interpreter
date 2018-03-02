@@ -31,6 +31,7 @@ public abstract class CoverReadUnsignedIntVariableNode extends CoverTypedExpress
 
     @Specialization
     protected long readUnsignedInt(VirtualFrame frame) {
+
         return (int) FrameUtil.getLongSafe(frame, getSlot());
     }
     

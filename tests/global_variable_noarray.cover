@@ -1,0 +1,9 @@
+#include <stdio.h>
+
+int ze;
+
+int main() {
+    ze = 42;
+	printf("Hello World: %d\n", ze);
+	return 0;
+}

@@ -37,20 +37,28 @@ public class CoverScope {
     private Map<String,CoverReference> definitions = new HashMap<>();
     private Map<String,CoverType> types = new HashMap<>();
     private CoverScope parent;
-    private List<SLStatementNode> globaldefs = new ArrayList<>();
+    private Map<FrameSlot,Object> arrays_heap = new HashMap<>();
 
-    public List<SLStatementNode> getGlobaldefs() {
-        return globaldefs;
-    }
 
     public CoverScope(CoverScope parent) {
         this.parent = parent;
         if (parent != null) {
             this.frameDescriptor = parent.frameDescriptor;
-        }else{
-            this.frameDescriptor = SingletonGlobalMaterializedFrame.getMe().getFrameDescriptor();
         }
     }
+
+    public Object getHeapObject(FrameSlot sl){
+        Object ret = arrays_heap.get(sl);
+        if(ret==null && parent != null)
+            return parent.getHeapObject(sl);
+        else
+            return ret;
+    }
+
+    public Object setHeapObject(FrameSlot sl, Object obj){
+        return arrays_heap.put(sl, obj);
+    }
+
     public FrameDescriptor getFrameDescriptor() {
         return frameDescriptor;
     }
@@ -77,6 +85,15 @@ public class CoverScope {
             slot.setKind(frameSlotKind);
             //System.err.println("added " + slot);
             ref.setFrameSlot(slot);
+
+            if(type.getBasicType() == BasicType.ARRAY){
+                System.out.println("Registering coverscope SIG_INT_ARR in Frameslot: " + frameDescriptor.toString() + " {ID: " + identifier + "}");
+            }
+
+            if(type.getBasicType() == BasicType.SIGNED_INT) {
+                System.out.println("Registering coverscope  SIG_INT_NOARR in Frameslot: " + frameDescriptor.toString() + " {ID: " + identifier + "}");
+
+            }
         }
         definitions.put(identifier, ref);
         //System.err.println("defined " + identifier + " as " + type.getBasicType());
@@ -102,9 +119,4 @@ public class CoverScope {
         return parent;
     }
 
-    public void addGlobalDef(SLStatementNode slStatementNode) {
-        if(this.parent == null){
-            this.globaldefs.add((SLStatementNode) slStatementNode);
-        }
-    }
 }
