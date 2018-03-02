@@ -74,7 +74,8 @@ While this whole thing runs great with the GraalVM, let's skip it for now and go
 
 * Clone the repository using
   `git clone https://github.com/OrdinaryDude/java-c-interpreter.git`
-* Go into the checked-out folder and execute `mvn compile package`
+* Go into the checked-out folder and execute `./installcdt.sh`
+* Execute `mvn compile package`
 
 ## IDE Setup 
 
