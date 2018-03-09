@@ -133,7 +133,7 @@ public class CoverParser {
     private void parseRaw() throws CoreException {
         //System.err.println("Parsing " + source.getPath());
 
-        FileContent fileContent = FileContent.createForExternalFileLocation(source.getPath());
+        FileContent fileContent = FileContent.create(source.getPath(), source.getCode().toCharArray());
 
         Map<String, String> definedSymbols = new HashMap<String, String>();
         String[] includePaths = new String[] {System.getProperty("user.dir") + "/runtime/include"};

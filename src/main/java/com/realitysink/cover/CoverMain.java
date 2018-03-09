@@ -16,10 +16,7 @@
  */
 package com.realitysink.cover;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.Map;
 
 import com.oracle.truffle.api.Truffle;
@@ -49,8 +46,10 @@ public final class CoverMain {
         }
         executeSource(source, System.in, System.out);
     }
-
-    private static void executeSource(Source source, InputStream in, PrintStream out) {
+    public static void executeSource(String source, InputStream in, PrintStream out) throws IOException {
+        executeSource(Source.fromReader(new InputStreamReader(new ByteArrayInputStream(source.getBytes())), "<stdin>").withMimeType(CoverLanguage.MIME_TYPE), in, out);
+    }
+    public static void executeSource(Source source, InputStream in, PrintStream out) {
 
         String runtime = Truffle.getRuntime().getName();
 
