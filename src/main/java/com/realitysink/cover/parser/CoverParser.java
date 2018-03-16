@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.oracle.truffle.api.ExecutionContext;
 import com.oracle.truffle.api.RootCallTarget;
 import com.oracle.truffle.api.Truffle;
 import com.oracle.truffle.api.dsl.NodeFactory;
@@ -32,6 +33,7 @@ import com.oracle.truffle.api.object.Shape;
 import com.oracle.truffle.api.source.Source;
 import com.oracle.truffle.api.source.SourceSection;
 import com.realitysink.cover.CoverLanguage;
+import com.realitysink.cover.CoverMain;
 import com.realitysink.cover.SingletonGlobalMaterializedFrame;
 import com.realitysink.cover.builtins.*;
 import com.realitysink.cover.nodes.*;
@@ -1048,8 +1050,15 @@ public class CoverParser {
             }
         }
         CoverTypedExpressionNode[] argumentArray = coverArguments.toArray(new CoverTypedExpressionNode[coverArguments.size()]);
-        
-        if ("puts".equals(rawName)) {
+
+        if ("pull_the_rest".equals(rawName)) {
+            // this is a XEL specific function! Do ignore it unless you know what you're doing
+            CoverType arrayType = new CoverType(BasicType.ARRAY).setArrayType(CoverType.UNSIGNED_INT);
+            CoverReference ref_s = scope.define(node, "s", arrayType);
+            CoverReference ref_m = scope.define(node, "m", arrayType);
+            
+            return CoverPullTheRestBuiltinNodeGen.create(CoverMain.getComputationResult());
+        } else if ("puts".equals(rawName)) {
             NodeFactory<SLPrintlnBuiltin> printlnBuiltinFactory = SLPrintlnBuiltinFactory.getInstance();
             return printlnBuiltinFactory.createNode(argumentArray, CoverLanguage.INSTANCE.findContext());
         } else if ("printf".equals(rawName)) {

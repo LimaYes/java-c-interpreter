@@ -32,11 +32,20 @@ import com.realitysink.cover.runtime.SLUndefinedNameException;
 
 public final class CoverMain {
 
+    static boolean skipCompResult = false;
+    static PolyglotEngine engine = null;
+    static ComputationResult computationResult = new ComputationResult();
+
+    public static ComputationResult getComputationResult() {
+        return computationResult;
+    }
+
     /**
      * The main entry point.
      */
     public static void main(String[] args) throws IOException {
-
+        skipCompResult = true;
+        computationResult = null;
 
         Source source;
         if (args.length == 0) {
@@ -46,41 +55,31 @@ public final class CoverMain {
         }
         executeSource(source, System.in, System.out);
     }
-    public static void executeSource(String source, InputStream in, PrintStream out) throws IOException {
-        executeSource(Source.fromReader(new InputStreamReader(new ByteArrayInputStream(source.getBytes())), "<stdin>").withMimeType(CoverLanguage.MIME_TYPE), in, out);
+    public static ComputationResult executeSource(String source, InputStream in, PrintStream out) throws IOException {
+        return executeSource((Source.fromReader(new InputStreamReader(new ByteArrayInputStream(source.getBytes())), "<stdin>").withMimeType(CoverLanguage.MIME_TYPE)), in, out);
     }
-    public static void executeSource(Source source, InputStream in, PrintStream out) {
+    public static ComputationResult executeSource(String source, InputStream in, PrintStream out, int[] storage) throws IOException {
+        return executeSource((Source.fromReader(new InputStreamReader(new ByteArrayInputStream(source.getBytes())), "<stdin>").withMimeType(CoverLanguage.MIME_TYPE)), in, out, storage);
+    }
+    private static ComputationResult executeSource(Source source, InputStream in, PrintStream out) {
+        return executeSource(source, in, out, null);
+    }
 
-        String runtime = Truffle.getRuntime().getName();
+    private synchronized static ComputationResult executeSource(Source source, InputStream in, PrintStream out, int[] storage) {
 
-
-        // We do not want that warning
-        /*if (!"Graal Truffle Runtime".equals(runtime)) {
-            System.err.println("WARNING: not running on Graal/Truffle but on " + runtime);
-        }*/
-
-        PolyglotEngine engine = PolyglotEngine.newBuilder().setIn(in).setOut(out).build();
-        assert engine.getLanguages().containsKey(CoverLanguage.MIME_TYPE);
-
-        Map<String, Instrument> instruments = engine.getInstruments();
-        /*for (String name : instruments.keySet()) {
-            System.err.println(name);
-        }*/
-        Instrument profiler = instruments.get(CoverProfiler.ID);
-        if (profiler == null) {
-          System.err.println("Truffle profiler not available. Might be a class path issue");
+        // WARNING: This makes initialization quick, but you will not be able to change in/out anymore
+        if(engine==null){
+            engine = PolyglotEngine.newBuilder().setIn(in).setOut(out).build();
+            assert engine.getLanguages().containsKey(CoverLanguage.MIME_TYPE);
         }
-        //profiler.setEnabled(true);
-        // The above doesn't work? It checks for a property:
-        //System.setProperty("truffle.profiling.enabled", "true");
-        
+
         try {
             Value result = engine.eval(source);
 
             if (result == null) {
                 throw new SLException("No function main() defined?");
             } else if (result.get() != SLNull.SINGLETON) {
-                // out.println(result.get());
+                out.println("Program exited with code: " + result.get());
             }
 
         } catch (Throwable ex) {
@@ -95,7 +94,10 @@ public final class CoverMain {
                 ex.printStackTrace(out);
             }
         }
-        //System.err.println("Profiler enabled: " + profiler.isEnabled());
+
         engine.dispose();
+
+        if(skipCompResult) return null;
+        else return computationResult.copy();
     }
 }
