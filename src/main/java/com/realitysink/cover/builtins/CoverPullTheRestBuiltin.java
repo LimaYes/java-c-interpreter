@@ -18,6 +18,7 @@ package com.realitysink.cover.builtins;
 
 import com.oracle.truffle.api.dsl.*;
 import com.oracle.truffle.api.frame.FrameSlot;
+import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.NodeInfo;
 import com.realitysink.cover.ComputationResult;
 import com.realitysink.cover.nodes.CoverType;
@@ -25,21 +26,26 @@ import com.realitysink.cover.nodes.CoverTypedExpressionNode;
 import com.realitysink.cover.nodes.SLExpressionNode;
 
 @NodeInfo(shortName = "pull_the_rest")
-@NodeField(name = "compres", type = ComputationResult.class)
 
 public abstract class CoverPullTheRestBuiltin extends CoverTypedExpressionNode {
-    private final FrameSlot frameSlot;
+    private final FrameSlot frameSlot_s;
+    private final FrameSlot frameSlot_m;
+    private final ComputationResult comp;
 
-    public CoverPullTheRestBuiltin(FrameSlot frameSlot) {
-        this.frameSlot = frameSlot;
+    public CoverPullTheRestBuiltin(ComputationResult comp, FrameSlot frameSlot_s, FrameSlot frameSlot_m) {
+        this.frameSlot_s = frameSlot_s;
+        this.frameSlot_m = frameSlot_m;
+        this.comp = comp;
     }
     @Specialization
-    public int pull() {
-    return 0;
+    public Object pull(VirtualFrame frame) {
+        frame.setObject(frameSlot_s, comp.storage);
+        frame.setObject(frameSlot_m, comp.personalized_ints);
+        return null;
     }
 
     @Override
     public CoverType getType() {
-        return CoverType.UNSIGNED_INT;
+        return CoverType.VOID;
     }    
 }

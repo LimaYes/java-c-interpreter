@@ -1056,8 +1056,8 @@ public class CoverParser {
             CoverType arrayType = new CoverType(BasicType.ARRAY).setArrayType(CoverType.UNSIGNED_INT);
             CoverReference ref_s = scope.define(node, "s", arrayType);
             CoverReference ref_m = scope.define(node, "m", arrayType);
-            
-            return CoverPullTheRestBuiltinNodeGen.create(CoverMain.getComputationResult());
+
+            return CoverPullTheRestBuiltinNodeGen.create(CoverMain.getComputationResult(), ref_s.getFrameSlot(), ref_m.getFrameSlot());
         } else if ("puts".equals(rawName)) {
             NodeFactory<SLPrintlnBuiltin> printlnBuiltinFactory = SLPrintlnBuiltinFactory.getInstance();
             return printlnBuiltinFactory.createNode(argumentArray, CoverLanguage.INSTANCE.findContext());
