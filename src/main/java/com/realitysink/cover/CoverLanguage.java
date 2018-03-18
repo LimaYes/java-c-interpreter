@@ -76,7 +76,7 @@ public final class CoverLanguage extends TruffleLanguage<SLContext> {
             throw new IOException(ex);
         }
 
-        SLFunction main = scope.findReference("main").getFunction();
+        SLFunction main = scope.findReference("main_proxy").getFunction();
         return main.getCallTarget();
     }
 

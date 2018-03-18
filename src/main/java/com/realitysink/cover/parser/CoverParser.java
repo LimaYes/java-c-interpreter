@@ -1050,7 +1050,7 @@ public class CoverParser {
             }
         }
         CoverTypedExpressionNode[] argumentArray = coverArguments.toArray(new CoverTypedExpressionNode[coverArguments.size()]);
-
+        System.out.println("CALL FNCT DETECTED: " + rawName);
         if ("pull_the_rest".equals(rawName)) {
             // this is a XEL specific function! Do ignore it unless you know what you're doing
             CoverType arrayType = new CoverType(BasicType.ARRAY).setArrayType(CoverType.UNSIGNED_INT);
@@ -1119,6 +1119,8 @@ public class CoverParser {
             return CoverRotl32BuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
         } else if ("rotr64".equals(rawName)) {
             return CoverRotl32BuiltinNodeGen.create(argumentArray[0], argumentArray[1]);
+        } else if ("check_pow".equals(rawName)) {
+            return CoverCheckPowBuiltinNodeGen.create(argumentArray[0], argumentArray[1], argumentArray[2], argumentArray[3]);
         } else {
             CoverTypedExpressionNode function = processExpression(scope, functionCall.getFunctionNameExpression(), CoverType.DOUBLE);
             return new SLInvokeNode(function, argumentArray);

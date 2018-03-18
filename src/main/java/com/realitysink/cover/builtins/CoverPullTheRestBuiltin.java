@@ -36,11 +36,14 @@ public abstract class CoverPullTheRestBuiltin extends CoverTypedExpressionNode {
         this.frameSlot_s = frameSlot_s;
         this.frameSlot_m = frameSlot_m;
         this.comp = comp;
+        System.out.println("Pulled in node created");
+
     }
     @Specialization
     public Object pull(VirtualFrame frame) {
         frame.setObject(frameSlot_s, comp.storage);
         frame.setObject(frameSlot_m, comp.personalized_ints);
+        System.out.println("Pulled in everything");
         return null;
     }
 
