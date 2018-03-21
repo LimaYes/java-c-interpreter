@@ -880,15 +880,15 @@ public class CoverParser {
                 CoverType arrayType = new CoverType(BasicType.ARRAY).setArrayType(type);
                 CoverReference ref = scope.define(node, name, arrayType);
                 if (type.getBasicType() == BasicType.DOUBLE) {
-                    nodes.add(new CreateLocalDoubleArrayNode(ref.getFrameSlot(), size));
+                    nodes.add(new CreateLocalDoubleArrayNode(ref.getFrameSlot(), scope, size));
                 } else if (type.getBasicType() == BasicType.FLOAT) {
-                    nodes.add(new CreateLocalFloatArrayNode(ref.getFrameSlot(), size));
+                    nodes.add(new CreateLocalFloatArrayNode(ref.getFrameSlot(), scope, size));
                 } else if (type.getBasicType() == BasicType.UNSIGNED_LONG) {
-                    nodes.add(new CreateLocalUnsignedLongArrayNode(ref.getFrameSlot(), size));
+                    nodes.add(new CreateLocalUnsignedLongArrayNode(ref.getFrameSlot(), scope, size));
                 } else if (type.getBasicType() == BasicType.SIGNED_LONG) {
-                    nodes.add(new CreateLocalSignedLongArrayNode(ref.getFrameSlot(), size));
+                    nodes.add(new CreateLocalSignedLongArrayNode(ref.getFrameSlot(), scope, size));
                 } else if (type.getBasicType() == BasicType.UNSIGNED_INT) {
-                    nodes.add(new CreateLocalUnsignedIntArrayNode(ref.getFrameSlot(), size));
+                    nodes.add(new CreateLocalUnsignedIntArrayNode(ref.getFrameSlot(), scope, size));
                 } else if (type.getBasicType() == BasicType.SIGNED_INT) {
                     nodes.add(new CreateLocalSignedIntArrayNode(ref.getFrameSlot(), scope, size));
                 } else {
@@ -1050,17 +1050,23 @@ public class CoverParser {
             }
         }
         CoverTypedExpressionNode[] argumentArray = coverArguments.toArray(new CoverTypedExpressionNode[coverArguments.size()]);
-        System.out.println("CALL FNCT DETECTED: " + rawName);
         if ("pull_the_rest".equals(rawName)) {
-            // this is a XEL specific function! Do ignore it unless you know what you're doing
-            CoverType arrayType = new CoverType(BasicType.ARRAY).setArrayType(CoverType.UNSIGNED_INT);
-            CoverReference ref_s = scope.define(node, "s", arrayType);
-            CoverReference ref_m = scope.define(node, "m", arrayType);
-
-            return CoverPullTheRestBuiltinNodeGen.create(CoverMain.getComputationResult(), ref_s.getFrameSlot(), ref_m.getFrameSlot());
+            CoverReference ref_m = scope.findReference("m");
+            CoverReference ref_s = scope.findReference("s");
+            if (ref_m == null || ref_s == null) throw new CoverParseException(node, "arrays not found, probably m and s were not defined");
+            FrameSlot frameSlot_m = ref_m.getFrameSlot();
+            FrameSlot frameSlot_s = ref_s.getFrameSlot();
+            if (frameSlot_m == null || frameSlot_s == null) throw new CoverParseException(node, "no frameslot for s or m found");
+            if (ref_m.getType().getBasicType() != BasicType.ARRAY || ref_s.getType().getBasicType() != BasicType.ARRAY)
+                throw new CoverParseException(node, "s or m is not an array");
+            CoverReadArrayVariableNode arrayExpression_m = CoverReadArrayVariableNodeGen.create(ref_m.getFrameSlot(), scope);
+            CoverReadArrayVariableNode arrayExpression_s = CoverReadArrayVariableNodeGen.create(ref_s.getFrameSlot(), scope);
+            return CoverPullTheRestBuiltinNodeGen.create(arrayExpression_m, arrayExpression_s);
         } else if ("puts".equals(rawName)) {
             NodeFactory<SLPrintlnBuiltin> printlnBuiltinFactory = SLPrintlnBuiltinFactory.getInstance();
             return printlnBuiltinFactory.createNode(argumentArray, CoverLanguage.INSTANCE.findContext());
+        } else if ("sync_r".equals(rawName)) {
+            return CoverSyncRBuiltinNodeGen.create(scope);
         } else if ("printf".equals(rawName)) {
             return new CoverPrintfBuiltin(argumentArray);
         } else if ("fwrite".equals(rawName)) {

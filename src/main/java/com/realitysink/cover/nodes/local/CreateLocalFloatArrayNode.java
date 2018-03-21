@@ -19,28 +19,30 @@ package com.realitysink.cover.nodes.local;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import com.realitysink.cover.nodes.CoverScope;
 import com.realitysink.cover.nodes.SLExpressionNode;
 import com.realitysink.cover.nodes.SLStatementNode;
+import com.realitysink.cover.nodes.expression.SLUnsignedLongLiteralNode;
 import com.realitysink.cover.runtime.CoverRuntimeException;
 
 public class CreateLocalFloatArrayNode extends SLStatementNode {
     private final FrameSlot frameSlot;
     @Child
-    SLExpressionNode size;
+    private SLExpressionNode size;
+    private CoverScope scope;
 
-    public CreateLocalFloatArrayNode(FrameSlot frameSlot, SLExpressionNode size) {
+    public CreateLocalFloatArrayNode(FrameSlot frameSlot, CoverScope scope, SLExpressionNode size) {
         this.frameSlot = frameSlot;
         this.size = size;
+        this.scope = scope;
+
+        SLUnsignedLongLiteralNode sizeNode = (SLUnsignedLongLiteralNode) size;
+        scope.setHeapObject(frameSlot, new float[(int)sizeNode.getValue()]);
     }
 
     @Override
     public void executeVoid(VirtualFrame frame) {
-        int s;
-        try {
-            s = (int) size.executeLong(frame);
-        } catch (UnexpectedResultException e) {
-            throw new CoverRuntimeException(this, e);
-        }
-        frame.setObject(frameSlot, new float[s]);
+        // pass
+        // TODO FIXME: This is not the correct way to introduce arrays
     }
 }

@@ -20,8 +20,10 @@ import com.oracle.truffle.api.CompilerDirectives;
 import com.oracle.truffle.api.frame.FrameSlot;
 import com.oracle.truffle.api.frame.VirtualFrame;
 import com.oracle.truffle.api.nodes.UnexpectedResultException;
+import com.realitysink.cover.nodes.CoverScope;
 import com.realitysink.cover.nodes.SLExpressionNode;
 import com.realitysink.cover.nodes.SLStatementNode;
+import com.realitysink.cover.nodes.expression.SLUnsignedLongLiteralNode;
 import com.realitysink.cover.runtime.CoverRuntimeException;
 
 import java.math.BigInteger;
@@ -30,24 +32,20 @@ public class CreateLocalUnsignedLongArrayNode extends SLStatementNode {
     private final FrameSlot frameSlot;
     @Child
     private SLExpressionNode size;
-    
-    public CreateLocalUnsignedLongArrayNode(FrameSlot frameSlot, SLExpressionNode size) {
+    private CoverScope scope;
+
+    public CreateLocalUnsignedLongArrayNode(FrameSlot frameSlot, CoverScope scope, SLExpressionNode size) {
         this.frameSlot = frameSlot;
         this.size = size;
+        this.scope = scope;
+
+        SLUnsignedLongLiteralNode sizeNode = (SLUnsignedLongLiteralNode) size;
+        scope.setHeapObject(frameSlot, new long[(int)sizeNode.getValue()]);
     }
 
     @Override
     public void executeVoid(VirtualFrame frame) {
-        int s;
-
-        // A rather risky thing but we have no automatic implicit casting of array argument
-        try {
-            s = (int) size.executeLong(frame);
-        } catch (UnexpectedResultException e) {
-            CompilerDirectives.transferToInterpreter();
-            throw new CoverRuntimeException(this, e);
-        }
-
-        frame.setObject(frameSlot, new long[s]);
+        // pass
+        // TODO FIXME: This is not the correct way to introduce arrays
     }
 }

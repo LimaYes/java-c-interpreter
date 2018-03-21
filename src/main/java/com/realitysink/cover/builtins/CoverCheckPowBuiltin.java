@@ -29,7 +29,7 @@ public abstract class CoverCheckPowBuiltin extends CoverTypedExpressionNode {
 
 
     @Specialization
-    public int checkpow(int a, int b, int c, int d) {
+    public long checkpow(long a, long b, long c, long d) {
         return 1;
     }
 
