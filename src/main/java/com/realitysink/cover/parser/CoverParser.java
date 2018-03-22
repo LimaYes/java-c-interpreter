@@ -1065,6 +1065,8 @@ public class CoverParser {
         } else if ("puts".equals(rawName)) {
             NodeFactory<SLPrintlnBuiltin> printlnBuiltinFactory = SLPrintlnBuiltinFactory.getInstance();
             return printlnBuiltinFactory.createNode(argumentArray, CoverLanguage.INSTANCE.findContext());
+        }  else if ("dump_vars".equals(rawName)) {
+            return CoverDumpVarsBuiltinNodeGen.create(scope);
         } else if ("sync_r".equals(rawName)) {
             return CoverSyncRBuiltinNodeGen.create(scope);
         } else if ("printf".equals(rawName)) {

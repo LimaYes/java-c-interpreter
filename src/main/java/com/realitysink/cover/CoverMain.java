@@ -5,9 +5,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -55,20 +55,35 @@ public final class CoverMain {
         }
         executeSource(source, System.in, System.out);
     }
+
     public static ComputationResult executeSource(String source, InputStream in, PrintStream out) throws IOException {
         return executeSource((Source.fromReader(new InputStreamReader(new ByteArrayInputStream(source.getBytes())), "<stdin>").withMimeType(CoverLanguage.MIME_TYPE)), in, out);
     }
+
     public static ComputationResult executeSource(String source, InputStream in, PrintStream out, int[] storage) throws IOException {
         return executeSource((Source.fromReader(new InputStreamReader(new ByteArrayInputStream(source.getBytes())), "<stdin>").withMimeType(CoverLanguage.MIME_TYPE)), in, out, storage);
     }
+
     private static ComputationResult executeSource(Source source, InputStream in, PrintStream out) {
         return executeSource(source, in, out, null);
+    }
+
+    public static ComputationResult executeSourceWithoutExceptionHandler(String source, InputStream in, PrintStream out) throws IOException {
+        return executeSourceWithoutExceptionHandler((Source.fromReader(new InputStreamReader(new ByteArrayInputStream(source.getBytes())), "<stdin>").withMimeType(CoverLanguage.MIME_TYPE)), in, out);
+    }
+
+    public static ComputationResult executeSourceWithoutExceptionHandler(String source, InputStream in, PrintStream out, int[] storage) throws IOException {
+        return executeSourceWithoutExceptionHandler((Source.fromReader(new InputStreamReader(new ByteArrayInputStream(source.getBytes())), "<stdin>").withMimeType(CoverLanguage.MIME_TYPE)), in, out, storage);
+    }
+
+    private static ComputationResult executeSourceWithoutExceptionHandler(Source source, InputStream in, PrintStream out) throws IOException {
+        return executeSourceWithoutExceptionHandler(source, in, out, null);
     }
 
     private synchronized static ComputationResult executeSource(Source source, InputStream in, PrintStream out, int[] storage) {
 
         // WARNING: This makes initialization quick, but you will not be able to change in/out anymore
-        if(engine==null){
+        if (engine == null) {
             engine = PolyglotEngine.newBuilder().setIn(in).setOut(out).build();
             assert engine.getLanguages().containsKey(CoverLanguage.MIME_TYPE);
         }
@@ -97,7 +112,30 @@ public final class CoverMain {
 
         engine.dispose();
 
-        if(skipCompResult) return null;
+        if (skipCompResult) return null;
+        else return computationResult.copy();
+    }
+
+    private synchronized static ComputationResult executeSourceWithoutExceptionHandler(Source source, InputStream in, PrintStream out, int[] storage) throws IOException {
+
+        // WARNING: This makes initialization quick, but you will not be able to change in/out anymore
+        if (engine == null) {
+            engine = PolyglotEngine.newBuilder().setIn(in).setOut(out).build();
+            assert engine.getLanguages().containsKey(CoverLanguage.MIME_TYPE);
+        }
+
+
+        Value result = engine.eval(source);
+        if (result == null) {
+            throw new SLException("No function main() defined?");
+        } else if (result.get() != SLNull.SINGLETON) {
+            throw new SLException("main exited with code != 0");
+
+        }
+
+        engine.dispose();
+
+        if (skipCompResult) return null;
         else return computationResult.copy();
     }
 }

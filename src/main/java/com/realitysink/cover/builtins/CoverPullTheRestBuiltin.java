@@ -38,7 +38,7 @@ public abstract class CoverPullTheRestBuiltin extends CoverTypedExpressionNode {
     public Object pull(long[] array_m, long[] array_s) {
         ComputationResult r = CoverMain.getComputationResult();
         if(r.personalized_ints.length != array_m.length) { System.err.println("M != m in puller"); return null; }
-        if(r.storage.length != array_s.length) { System.err.println("Storage != s in puller"); return null; }
+        if(r.storage.length != array_s.length) { System.err.println("Storage != s in puller ... CompRes has " + r.storage.length + ", array_s has " + array_s.length); return null; }
         for(int i=0;i<array_m.length;++i) array_m[i] = r.personalized_ints[i];
         for(int i=0;i<array_s.length;++i) array_s[i] = r.storage[i];
         return null;
